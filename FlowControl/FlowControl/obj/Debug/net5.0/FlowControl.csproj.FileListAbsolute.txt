@@ -1,0 +1,16 @@
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\FlowControl.exe
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\FlowControl.deps.json
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\FlowControl.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\FlowControl.runtimeconfig.dev.json
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\FlowControl.dll
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\ref\FlowControl.dll
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\bin\Debug\net5.0\FlowControl.pdb
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.dll
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\ref\FlowControl.dll
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.pdb
+C:\Users\mikke\Desktop\c#\FlowControl\FlowControl\obj\Debug\net5.0\FlowControl.genruntimeconfig.cache
