@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "F:\\REPOS\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj": {}
+    "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj": {}
   },
   "projects": {
-    "F:\\REPOS\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj": {
+    "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\REPOS\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj",
+        "projectUniqueName": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj",
         "projectName": "FlowControl",
-        "projectPath": "F:\\REPOS\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj",
-        "packagesPath": "C:\\Users\\Mikkel\\.nuget\\packages\\",
-        "outputPath": "F:\\REPOS\\cs-projects\\FlowControl\\FlowControl\\obj\\",
+        "projectPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj",
+        "packagesPath": "C:\\Users\\mikke\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Mikkel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mikke\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -54,7 +54,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.104\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

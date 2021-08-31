@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj",
-      "projectName": "FlowControl",
-      "projectPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\FlowControl.csproj",
+      "projectUniqueName": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\GameLoop101\\GameLoop101.csproj",
+      "projectName": "GameLoop101",
+      "projectPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\GameLoop101\\GameLoop101.csproj",
       "packagesPath": "C:\\Users\\mikke\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowControl\\FlowControl\\obj\\",
+      "outputPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\GameLoop101\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mikke\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,0 +1,16 @@
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\GameLoop101.exe
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\GameLoop101.deps.json
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\GameLoop101.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\GameLoop101.runtimeconfig.dev.json
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\GameLoop101.dll
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\ref\GameLoop101.dll
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\bin\Debug\net5.0\GameLoop101.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.dll
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\ref\GameLoop101.dll
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\GameLoop101\obj\Debug\net5.0\GameLoop101.genruntimeconfig.cache

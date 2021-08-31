@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowToCode\\FlowToCode.csproj",
+      "projectUniqueName": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowToCode\\FlowToCode\\FlowToCode.csproj",
       "projectName": "FlowToCode",
-      "projectPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowToCode\\FlowToCode.csproj",
+      "projectPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowToCode\\FlowToCode\\FlowToCode.csproj",
       "packagesPath": "C:\\Users\\mikke\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowToCode\\obj\\",
+      "outputPath": "C:\\Users\\mikke\\Desktop\\c#\\cs-projects\\FlowToCode\\FlowToCode\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mikke\\AppData\\Roaming\\NuGet\\NuGet.Config",
