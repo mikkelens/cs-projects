@@ -1,0 +1,16 @@
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\Hangman.exe
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\Hangman.deps.json
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\Hangman.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\Hangman.runtimeconfig.dev.json
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\Hangman.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\ref\Hangman.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\bin\Debug\net5.0\Hangman.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\ref\Hangman.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\Hangman\obj\Debug\net5.0\Hangman.genruntimeconfig.cache
