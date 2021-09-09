@@ -1,23 +1,158 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Hangman
 {
     class Program
     {
-        private static int startXOffset = 5;
-        private static int startYOffset = 2;
+        private const int startXOffset = 3;
+        private const int startYOffset = 1;
 
-        private static int standardWait = 850; // time in ms
+        private const int standardWait = 500; // time in ms
+        private const int longWait = 2250;
 
-        private static string title = "HANGMAN";
-        private static char seperator = '=';
+        private const string title = "HANGMAN";
+        private const char seperator = '=';
 
-        private static string word = "gaming";
-        private static char censorLetter = '*';
+        private const char censorLetter = '_';
+        private const char spaceLetter = ' ';
 
+        private static List<string> drawings = new()
+        {
+            @"
+ 
+
+
+
+
+
+       ",
+            @"
+ 
+
+
+
+
+
+-------",
+            @"
+ 
+   
+    
+   
+   
+|
+-------",
+            @"
+ 
+   
+    
+|   
+|   
+|
+-------",
+            @"
+ 
+|   
+|    
+|   
+|   
+|
+-------",
+            @"
+ _____
+|/   
+|    
+|   
+|   
+|
+-------",
+            @"
+ _____
+|/   |
+|    
+|   
+|   
+|
+-------",
+            @"
+ _____
+|/   |
+|    O
+|   
+|   
+|
+-------",
+            @"
+ _____
+|/   |
+|    O
+|    |
+|   
+|
+-------",
+            @"
+ _____
+|/   |
+|    O
+|   /|
+|   
+|
+-------",
+            @"
+ _____
+|/   |
+|    O
+|   /|\
+|   
+|
+-------",
+            @"
+ _____
+|/   |
+|    O
+|   /|\
+|   / 
+|
+-------",
+            @"
+ _____
+|/   |
+|    O !
+|   /|\
+|   / \
+|
+-------",
+            @"
+ _____
+|/   |
+|   x-x
+|   /|\
+|   / \
+|
+-------"
+        };
+
+        private static List<string> possibleWords = new()
+        {
+            "gaming",
+            "fortnite",
+            "the death of the author",
+            "society",
+            "fucking horseshit",
+            "sussy baka",
+            "bread",
+            "pensive",
+            "communism"
+        };
+
+        private static string word;
         private static string censorWord;
+        private static string usedLetters;
         private static int remainingLetters;
+        private static int mistakes;
+        private static bool lastGuessWasInvalid;
 
 
         static void Main(string[] args)
@@ -25,94 +160,143 @@ namespace Hangman
             ClearScreen();
             IntroText();
             Thread.Sleep(standardWait);
-            PrintSentence("Press a key to continue.", startXOffset);
+            PrintSentence("Press any key to continue.");
             WaitForInput();
 
             // OUTER LOOP (games)
-            string inputRead;
+            char inputRead;
             do
             {
-                censorWord = new string(censorLetter, word.Length);
-                // INNER LOOP (attempts)
                 bool playing = true;
+                bool winning = false;
+                int randomWordIndex = new Random().Next(0, possibleWords.Count);
+                word = possibleWords[randomWordIndex];
+                censorWord = GenerateCensor();
+                usedLetters = "";
+                remainingLetters = word.Length;
+                mistakes = 0;
+                lastGuessWasInvalid = false;
+
+                // INNER LOOP (attempts)
                 while (playing)
                 {
-                    DisplayWord();
+                    RefreshGameScreen();
 
                     char guess = Console.ReadKey().KeyChar;
-
-                    if (censorWord.Contains(guess))
+                    if (!char.IsLetter(guess)) continue; // only continues if guess is letter
+                    
+                    if (usedLetters.Contains(guess))
                     {
-
+                        // previous guess
+                        lastGuessWasInvalid = true;
                     }
                     else
                     {
-                        bool guessedCorrect = word.Contains(guess);
-                        if (guessedCorrect)
+                        lastGuessWasInvalid = false;
+                        usedLetters += guess;
+                        if (word.Contains(guess))
                         {
-                            censorWord = GenerateNewCensor(censorWord, guess);
+                            // good guess
+                            AddLetterToCensor(guess);
+                            remainingLetters--;
                             if (censorWord == word)
+                            {
+                                winning = true;
+                                playing = false;
+                            }
+                        }
+                        else
+                        {
+                            // bad guess
+                            mistakes++;
+                            PrintSentence($"{guess.ToString().ToUpper()} is not a part of the word.");
+                            if (usedLetters.Length >= drawings.Count)
                             {
                                 playing = false;
                             }
                         }
                     }
                 } // exits when done/won
-                
-                DisplayWord();
-                PrintSentence("You won! Congratulations.", startXOffset);
-                Thread.Sleep(standardWait);
 
-                PrintSentence("Do you want to play again? (Y/N)", startXOffset);
+                RefreshGameScreen();
 
-                do inputRead = Console.ReadKey().Key.ToString().ToLower();
-                while (inputRead != "y" && inputRead != "n");
+                if (winning)
+                {
+                    WinText();
+                }
+                else
+                {
+                    LoseText();
+                }
+                Thread.Sleep(longWait);
 
-            } while (inputRead == "y"); // end if we pressed N
+                ClearScreen();
 
-            Console.WriteLine("\n\n\nPress any key to exit.");
+                PrintSentence("Do you want to play again? (Y/N)");
+
+                do inputRead = Console.ReadKey().KeyChar;
+                while (inputRead != 'y' && inputRead != 'n');
+            } while (inputRead == 'y'); // end if we pressed N
+
+            PrintSentence("Press any key to exit.", 0, 3);
             WaitForInput();
         }
 
-        #region Sections
+        #region Print sections
         static void IntroText()
         {
             string display = $"{title}.";
-            PrintSentence(display, startXOffset);
-            PrintSentence(new string(seperator, display.Length), startXOffset);
-            Console.WriteLine("\n");
+            PrintSentence(new string(seperator, display.Length));
+            PrintSentence(display);
+            PrintSentence(new string(seperator, display.Length));
         }
-        static void WaitForInput()
+
+        static void WinText()
         {
-            Console.ReadKey();
+            PrintSentence("You won! Congratulations.", 0, 1);
+        }
+
+        static void LoseText()
+        {
+            PrintSentence("You lost. :^(", 0, 1);
         }
         #endregion
 
         #region Methods
+        static void WaitForInput()
+        {
+            Console.ReadKey();
+        }
+
         static void ClearScreen()
         {
             Console.Clear();
             Console.SetCursorPosition(startXOffset, startYOffset);
         }
 
-        static void DisplayWord()
+        static void RefreshGameScreen()
         {
             ClearScreen();
-            PrintSentence("Guess a letter of the secret word!", startXOffset);
-            PrintSentence(censorWord, startXOffset);
+            // - printing time! -
+            PrintSentence("Guess a letter of the secret word!");
+            Console.WriteLine(drawings[mistakes]);
+            PrintSentence(""); // (space)
+            PrintSentence($"{remainingLetters} remaining letters.");
+            PrintSentence(usedLetters.Length > 0 ? $"Letters guessed: {usedLetters}" : "No guesses yet...");
+            PrintSentence(lastGuessWasInvalid ? $"You already guessed that letter." : "");
+            PrintSentence(censorWord);
         }
 
-        static void PrintSentence(string sentence, int xOffset, int yOffset = 0, bool newLine = true)
+        static void PrintSentence(string sentence, int xOffset = 0, int yOffset = 0, bool newLine = true)
         {
-            int xPosition = startXOffset + xOffset;
-            int yPosition = Console.GetCursorPosition().Top + yOffset;
+            int xPosition = Math.Max(0, startXOffset + xOffset); // max(0) for floor
+            int yPosition = Math.Max(0, Console.GetCursorPosition().Top + yOffset);
             for (int i = 0; i < sentence.Length; i++)
             {
                 PrintCharacter( xPosition + i, yPosition, sentence[i]);
             }
 
-            int newLineOffset = 1;
-            if (!newLine) newLineOffset = 0;
+            int newLineOffset = newLine ? 1 : 0;
             Console.SetCursorPosition(xPosition, yPosition + newLineOffset);
         }
 
@@ -122,28 +306,34 @@ namespace Hangman
             Console.Write(print);
         }
 
-        static string GenerateNewCensor(string oldCensor, char guess)
+        static void AddLetterToCensor(char letter)
         {
-            string censor = "";
-            remainingLetters = word.Length;
+            string newBuild = "";
             for (int i = 0; i < word.Length; i++)
             {
-                if (word[i] == oldCensor[i]) // if we already guessed it
+                if (word[i] == letter)
                 {
-                    censor += oldCensor[i];
+                    newBuild += letter;
                 }
-                else if (word[i] == guess) // newly guessed
+                else
                 {
-                    censor += word[i];
+                    newBuild += censorWord[i];
                 }
-                else // incorrect spot
-                {
-                    censor += censorLetter;
-                    remainingLetters--; // updates remaining letters (number)
-                }
+            }
+            censorWord = newBuild;
+        }
+
+        static string GenerateCensor()
+        {
+            string censor = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                censor += GetCensorChar(word[i]);
             }
             return censor;
         }
+
+        static char GetCensorChar(char censor) => censor == spaceLetter ? spaceLetter : censorLetter;
         #endregion
     }
 }
