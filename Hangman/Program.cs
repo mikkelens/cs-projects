@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace Hangman
@@ -18,122 +19,159 @@ namespace Hangman
         private const char censorLetter = '_';
         private const char spaceLetter = ' ';
 
-        private const int difficulty = 2;
+        private static int difficulty = 1;
 
-        private static List<string> drawings = new()
+        private static List<string[]> drawings = new()
         {
-            @"
- 
-
-
-
-
-
-       ",
-            @"
- 
-
-
-
-
-
--------",
-            @"
- 
-   
-    
-   
-   
-|
--------",
-            @"
- 
-   
-    
-|   
-|   
-|
--------",
-            @"
- 
-|   
-|    
-|   
-|   
-|
--------",
-            @"
- _____
-|/   
-|    
-|   
-|   
-|
--------",
-            @"
- _____
-|/   |
-|    
-|   
-|   
-|
--------",
-            @"
- _____
-|/   |
-|    O
-|   
-|   
-|
--------",
-            @"
- _____
-|/   |
-|    O
-|    |
-|   
-|
--------",
-            @"
- _____
-|/   |
-|    O
-|   /|
-|   
-|
--------",
-            @"
- _____
-|/   |
-|    O
-|   /|\
-|   
-|
--------",
-            @"
- _____
-|/   |
-|    O
-|   /|\
-|   / 
-|
--------",
-            @"
- _____
-|/   |
-|    O !
-|   /|\
-|   / \
-|
--------",
-            @"
- _____
-|/   |
-|   x-x
-|   /|\
-|   / \
-|
--------"
+            new[] {
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        "
+            },
+            new[]
+            {
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "--------"
+            },
+            new[]
+            {
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "        ",
+                "        ",
+                "        ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "        ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "____    ",
+                "|/      ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|    O  ",
+                "|       ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|    O  ",
+                "|    |  ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|    O  ",
+                "|   /|  ",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|    O  ",
+                "|   /|\\",
+                "|       ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|    O  ",
+                "|   /|\\",
+                "|   /   ",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|    O !",
+                "|   /|\\",
+                "|   / \\",
+                "|       ",
+                "--------"
+            },
+            new[]
+            {
+                "______  ",
+                "|/   |  ",
+                "|   x-x ",
+                "|   /|\\",
+                "|   / \\",
+                "|       ",
+                "--------"
+            }
         };
 
         private static List<string> possibleWords = new()
@@ -146,7 +184,8 @@ namespace Hangman
             "sussy baka",
             "bread",
             "pensive",
-            "communism"
+            "communism",
+            "AAAAAAAAAA"
         };
 
         private static string word;
@@ -179,6 +218,20 @@ namespace Hangman
                 mistakes = 0;
                 lastGuessWasInvalid = false;
 
+                ClearScreen();
+                PrintSentence("Declare what difficulty you want, or continue with a difficulty of 1 (press enter)");
+
+                string difficultyInput;
+                int difficultyInt;
+                bool isInt;
+                do
+                {
+                    difficultyInput = Console.ReadLine();
+                    isInt = int.TryParse(difficultyInput, out int result);
+                    difficultyInt = result;
+                } while (!isInt && !string.IsNullOrWhiteSpace(difficultyInput));
+                difficulty = isInt ? difficultyInt : difficulty;
+
                 // INNER LOOP (attempts)
                 while (playing)
                 {
@@ -187,7 +240,7 @@ namespace Hangman
                     char guess = Console.ReadKey().KeyChar;
                     if (!char.IsLetter(guess)) continue; // only continues if guess is letter
                     
-                    if (usedLetters.Contains(guess))
+                    if (usedLetters.ToLower().Contains(char.ToLower(guess)))
                     {
                         // previous guess
                         lastGuessWasInvalid = true;
@@ -195,12 +248,12 @@ namespace Hangman
                     else
                     {
                         lastGuessWasInvalid = false;
-                        usedLetters += guess;
-                        if (word.Contains(guess))
+                        usedLetters = SortedString(usedLetters + guess);
+                        if (word.ToLower().Contains(char.ToLower(guess)))
                         {
                             // good guess
                             AddLetterToCensor(guess);
-                            if (censorWord == word)
+                            if (censorWord == word.ToLower())
                             {
                                 winning = true;
                                 playing = false;
@@ -281,12 +334,23 @@ namespace Hangman
             ClearScreen();
             // - printing time! -
             PrintSentence("Guess a letter of the secret word!");
-            Console.WriteLine(drawings[Math.Min(drawings.Count - 1, mistakes * difficulty)]);
+            PrintDrawing(drawings[Math.Min(mistakes * difficulty, drawings.Count - 1)]);
             PrintSentence(""); // (space)
             PrintSentence($"{remainingLetters} remaining letters.");
             PrintSentence(usedLetters.Length > 0 ? $"Letters guessed: {usedLetters}" : "No guesses yet...");
             PrintSentence(lastGuessWasInvalid ? $"You already guessed that letter." : "");
             PrintSentence(censorWord);
+        }
+
+        static void PrintDrawing(string[] drawing, int xOffset = 0, int yOffset = 0, bool newLine = true)
+        {
+            int xPosition = Math.Max(0, startXOffset + xOffset); // max(0) for floor
+            int yPosition = Math.Max(0, Console.GetCursorPosition().Top + yOffset);
+
+            for (int i = 0; i < drawing.Length; i++)
+            {
+                PrintSentence(drawing[i]);
+            }
         }
 
         static void PrintSentence(string sentence, int xOffset = 0, int yOffset = 0, bool newLine = true)
@@ -308,12 +372,17 @@ namespace Hangman
             Console.Write(print);
         }
 
+        static string SortedString(string thingy)
+        {
+            return string.Concat(thingy.OrderBy(c => c));
+        }
+
         static void AddLetterToCensor(char letter)
         {
             string newBuild = "";
             for (int i = 0; i < word.Length; i++)
             {
-                if (word[i] == letter)
+                if (char.ToLower(word[i]) == char.ToLower(letter))
                 {
                     newBuild += letter;
                     remainingLetters--;
