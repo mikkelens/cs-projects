@@ -18,6 +18,8 @@ namespace Hangman
         private const char censorLetter = '_';
         private const char spaceLetter = ' ';
 
+        private const int difficulty = 2;
+
         private static List<string> drawings = new()
         {
             @"
@@ -198,7 +200,6 @@ namespace Hangman
                         {
                             // good guess
                             AddLetterToCensor(guess);
-                            remainingLetters--;
                             if (censorWord == word)
                             {
                                 winning = true;
@@ -210,7 +211,7 @@ namespace Hangman
                             // bad guess
                             mistakes++;
                             PrintSentence($"{guess.ToString().ToUpper()} is not a part of the word.");
-                            if (usedLetters.Length >= drawings.Count)
+                            if (mistakes * difficulty >= drawings.Count)
                             {
                                 playing = false;
                             }
@@ -218,6 +219,7 @@ namespace Hangman
                     }
                 } // exits when done/won
 
+                censorWord = word;
                 RefreshGameScreen();
 
                 if (winning)
@@ -230,12 +232,12 @@ namespace Hangman
                 }
                 Thread.Sleep(longWait);
 
-                ClearScreen();
 
                 PrintSentence("Do you want to play again? (Y/N)");
 
                 do inputRead = Console.ReadKey().KeyChar;
                 while (inputRead != 'y' && inputRead != 'n');
+
             } while (inputRead == 'y'); // end if we pressed N
 
             PrintSentence("Press any key to exit.", 0, 3);
@@ -279,7 +281,7 @@ namespace Hangman
             ClearScreen();
             // - printing time! -
             PrintSentence("Guess a letter of the secret word!");
-            Console.WriteLine(drawings[mistakes]);
+            Console.WriteLine(drawings[Math.Min(drawings.Count - 1, mistakes * difficulty)]);
             PrintSentence(""); // (space)
             PrintSentence($"{remainingLetters} remaining letters.");
             PrintSentence(usedLetters.Length > 0 ? $"Letters guessed: {usedLetters}" : "No guesses yet...");
@@ -314,6 +316,7 @@ namespace Hangman
                 if (word[i] == letter)
                 {
                     newBuild += letter;
+                    remainingLetters--;
                 }
                 else
                 {
