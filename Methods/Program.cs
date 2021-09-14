@@ -5,11 +5,13 @@ namespace Methods
 {
     class Program
     {
+        enum Anchor { Left, Center, Right };
+
         static void Main(string[] args)
         {
             //Assignment_1();
 
-            //Assigment_2();
+            //Assignment_2();
 
             Assignment_3();
 
@@ -58,7 +60,7 @@ namespace Methods
 
         #region Assignment 2 (Equal / "lige eller ulige")
 
-        static void Assigment_2()
+        static void Assignment_2()
         {
             Print($"\nInput a number to see if it is even.");
             string evenReply = InputLine();
@@ -102,35 +104,92 @@ namespace Methods
         }
         #endregion
 
-        #region Assignment 3 ("justering af tekst")
+        #region Assignment 3 (Print adjustments / "justering af tekst")
         static void Assignment_3()
         {
-            Vector2Int point1 = new Vector2Int(15, 0);
-            PrintCenterXY("Why are we still here?", point1);
-            Vector2Int point2 = new Vector2Int(6, 2);
-            PrintXY("Just to suffer?", point2);
+            int xOutset = 20;
+            Print($"Outset: {xOutset}");
+
+            //Thread.Sleep(250);
+
+            //Vector2Int point1 = new Vector2Int(xOutset, 3);
+            //PrintXY("Why are we still here?", point1); // Anchor.left
+            //Vector2Int point2 = new Vector2Int(xOutset, 5);
+            //PrintXY("Just to suffer?", point2, Anchor.center);
+            //Vector2Int point3 = new Vector2Int(xOutset, 7);
+            //PrintXY("Every night...", point3, Anchor.right);
+
+            Thread.Sleep(250);
+
+            Vector2Int point4 = new Vector2Int(xOutset, 2);
+            Box(point4, "", new Vector2Int(0, 0));
+
+            Vector2Int point5 = new Vector2Int(xOutset, 8);
+            Box(point5, "yeah...", new Vector2Int(2, 2), Anchor.Center);
+
+            Vector2Int point6 = new Vector2Int(xOutset, 20);
+            Box(point6, "nahhhhhhh", new Vector2Int(1, 1), Anchor.Right);
         }
 
-        static void Box(Vector2Int position, Vector2Int dimensions, Vector2Int spacing)
+        static void Box(Vector2Int position, string message = "", Vector2Int extraSpacing = default, Anchor justification = Anchor.Left)
         {
+            float aspectRatio = 2; // width divided by height aka. width is (aspect-ratio) times larger than height
+            Vector2Int actualSpacing = new Vector2Int((int)(extraSpacing.X * aspectRatio) + 1, extraSpacing.Y + 1);
 
+            Vector2Int wordOccupation = new Vector2Int(message.Length > 1 ? message.Length : 1, 1);
+            Vector2Int boxDimensions = new Vector2Int(wordOccupation.X + actualSpacing.X * 2, wordOccupation.Y + actualSpacing.Y * 2);
+
+            Vector2Int offset = Vector2Int.Zero;
+            if(justification == Anchor.Center)
+                offset = new Vector2Int(-boxDimensions.X / 2, 0);
+            else if (justification == Anchor.Right)
+                offset = new Vector2Int(-boxDimensions.X, 0);
+
+            Vector2Int cornerPosition = new Vector2Int(position.X + offset.X, position.Y + offset.Y);
+
+            PrintXY($"CORNER POSITION: {cornerPosition.X}, {cornerPosition.Y}. DIMENSIONS: {boxDimensions.X}, {boxDimensions.Y}. EXTRA SPACING: {extraSpacing.X}, {extraSpacing.Y}", new Vector2Int(cornerPosition.X, cornerPosition.Y - 1));
+
+            // boundary drawing
+            char xBoundary = '|';
+            char yBoundary = '-';
+            for (int y = 0; y < boxDimensions.Y; y++)
+            {
+                for (int x = 0; x < boxDimensions.X; x++)
+                {
+                    Vector2Int charPosition = new Vector2Int(cornerPosition.X + x, cornerPosition.Y + y);
+                    if (y == 0 || y == boxDimensions.Y - 1)
+                    {
+                        PrintXY(yBoundary.ToString(), charPosition);
+                    }
+                    else if (x == 0 || x == boxDimensions.X - 1)
+                    {
+                        PrintXY(xBoundary.ToString(), charPosition);
+                    }
+                }
+            }
+
+            Vector2Int messagePosition = new Vector2Int(cornerPosition.X + actualSpacing.X, cornerPosition.Y + actualSpacing.Y);
+            PrintXY(message, messagePosition);
         }
 
-        static void PrintCenterXY(string message, Vector2Int centerPosition)
+        static void PrintXY(string message, Vector2Int desiredPosition, Anchor justification = Anchor.Left)
         {
-            int offsetX = message.Length / 2;
-            Vector2Int offsetPosition = new Vector2Int(centerPosition.X - offsetX, centerPosition.Y);
-            PrintXY(message, offsetPosition);
-        }
-
-        static void PrintXY(string message, Vector2Int leftPosition)
-        {
-            Vector2Int actualPosition = RightJustifyXY(leftPosition);
+            int offsetX = 0; // if justification == Anchor.left
+            if (justification == Anchor.Center)
+            {
+                offsetX = message.Length / 2;
+            }
+            else if (justification == Anchor.Right)
+            {
+                offsetX = message.Length;
+            }
+            Vector2Int offsetPosition = new Vector2Int(desiredPosition.X - offsetX, desiredPosition.Y);
+            Vector2Int actualPosition = ClampedPosition(offsetPosition);
             Console.SetCursorPosition(actualPosition.X, actualPosition.Y);
             Print(message, false);
         }
 
-        static Vector2Int RightJustifyXY(Vector2Int position)
+        static Vector2Int ClampedPosition(Vector2Int position)
         {
             int width = Console.WindowWidth;
             int height = Console.WindowHeight;
@@ -163,7 +222,7 @@ namespace Methods
         #endregion
 
         #region structs (yes really)
-        public struct Vector2Int
+        public partial struct Vector2Int
         {
             public int X;
             public int Y;
@@ -173,6 +232,14 @@ namespace Methods
                 this.X = x;
                 this.Y = y;
             }
+
+            public static Vector2Int Zero => default;
+
+            public static Vector2Int One => new Vector2Int(1, 1);
+            public static Vector2Int Right => new Vector2Int(1, 0);
+            public static Vector2Int Left => new Vector2Int(-1, 0);
+            public static Vector2Int Up => new Vector2Int(0, 1);
+            public static Vector2Int Down => new Vector2Int(0, -1);
 
             public override bool Equals(object obj)
             {
