@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Text;
 using System.Threading;
 
 namespace Methods
@@ -7,23 +9,40 @@ namespace Methods
     {
         enum Anchor { Left, Center, Right };
 
+        private static int _highestPrintDepth = 0; // for managing print positions. In assignment 3 & 4 we use it.
+        private static Vector2Int metaPrintPos = Vector2Int.Zero;
+
+        private static bool enableHeightClamp = false;
+
         static void Main(string[] args)
         {
-            //Assignment_1();
+            RunAssignment(Assignment_1, 1);
 
-            //Assignment_2();
+            RunAssignment(Assignment_2, 2);
 
-            Assignment_3();
+            RunAssignment(Assignment_3, 3);
+
+            RunAssignment(Assignment_4, 4);
 
             End();
         }
 
-        #region program execution
+        #region program execution / meta
+        static void RunAssignment(Action assignment, int assignmentNumber = 0)
+        {
+            _highestPrintDepth++;
+            metaPrintPos.Y = _highestPrintDepth;
+            PrintXY($"----- ASSIGNMENT{(assignmentNumber != 0 ? $" {assignmentNumber}" : "")} -----", metaPrintPos);
+            _highestPrintDepth++;
+            assignment();
+        }
+
         static void End()
         {
             Console.CursorVisible = false;
             Thread.Sleep(500);
-            Console.Write("\n\n\nPress any key to exit.");
+            Vector2Int position = new Vector2Int(0, _highestPrintDepth + 3);
+            PrintXY("All used assignments have been run. Press any key to exit.", position);
             Console.ReadKey();
         }
         #endregion
@@ -108,7 +127,7 @@ namespace Methods
         static void Assignment_3()
         {
             int xOutset = 20;
-            Print($"Outset: {xOutset}");
+            Print($"\nOutset: {xOutset}");
 
             //Thread.Sleep(250);
 
@@ -121,14 +140,16 @@ namespace Methods
 
             Thread.Sleep(250);
 
-            Vector2Int point4 = new Vector2Int(xOutset, 2);
+            Vector2Int point4 = new Vector2Int(xOutset, _highestPrintDepth + 2);
             Box(point4, "", new Vector2Int(0, 0));
 
-            Vector2Int point5 = new Vector2Int(xOutset, 8);
+            Vector2Int point5 = new Vector2Int(xOutset, _highestPrintDepth + 2);
             Box(point5, "yeah...", new Vector2Int(2, 2), Anchor.Center);
 
-            Vector2Int point6 = new Vector2Int(xOutset, 20);
+            Vector2Int point6 = new Vector2Int(xOutset, _highestPrintDepth + 2);
             Box(point6, "nahhhhhhh", new Vector2Int(1, 1), Anchor.Right);
+
+            _highestPrintDepth++;
         }
 
         static void Box(Vector2Int position, string message = "", Vector2Int extraSpacing = default, Anchor justification = Anchor.Left)
@@ -147,7 +168,7 @@ namespace Methods
 
             Vector2Int cornerPosition = new Vector2Int(position.X + offset.X, position.Y + offset.Y);
 
-            PrintXY($"CORNER POSITION: {cornerPosition.X}, {cornerPosition.Y}. DIMENSIONS: {boxDimensions.X}, {boxDimensions.Y}. EXTRA SPACING: {extraSpacing.X}, {extraSpacing.Y}", new Vector2Int(cornerPosition.X, cornerPosition.Y - 1));
+            //PrintXY($"CORNER POSITION: {cornerPosition.X}, {cornerPosition.Y}. DIMENSIONS: {boxDimensions.X}, {boxDimensions.Y}. EXTRA SPACING: {extraSpacing.X}, {extraSpacing.Y}", new Vector2Int(cornerPosition.X, cornerPosition.Y - 1));
 
             // boundary drawing
             char xBoundary = '|';
@@ -186,15 +207,86 @@ namespace Methods
             Vector2Int offsetPosition = new Vector2Int(desiredPosition.X - offsetX, desiredPosition.Y);
             Vector2Int actualPosition = ClampedPosition(offsetPosition);
             Console.SetCursorPosition(actualPosition.X, actualPosition.Y);
+            _highestPrintDepth = Math.Max(_highestPrintDepth, actualPosition.Y);
             Print(message, false);
         }
 
         static Vector2Int ClampedPosition(Vector2Int position)
         {
             int width = Console.WindowWidth;
-            int height = Console.WindowHeight;
+            int height = enableHeightClamp ? Console.WindowHeight : Console.BufferHeight;
             return new Vector2Int(Math.Clamp(position.X, 0, width), Math.Clamp(position.Y, 0, height));
         }
+        #endregion
+
+        #region Assignment 4 (StringBuilder / "Bonus")
+        static void Assignment_4()
+        {
+            string word = "yeah?";
+            Vector2Int reverseBoxPos = new Vector2Int(0, _highestPrintDepth + 2);
+            Box(reverseBoxPos, $"Word: '{word}', Reverse word: '{Reverse(word)}'.", Vector2Int.One);
+
+            string mask = "xx  x";
+            Vector2Int maskedBoxPos = new Vector2Int(0, _highestPrintDepth + 2);
+            Box(maskedBoxPos, $"Word: '{word}', Mask: '{mask}', Masked word: '{Mask(word, mask, true)}'.", Vector2Int.One);
+
+            string word2 = "g a m i n g";
+            Vector2Int exclusiveBoxPos = new Vector2Int(0, _highestPrintDepth + 2);
+            Box(exclusiveBoxPos, $"Word 1: '{word}', Word 2: '{word2}', Exclusive combined word: '{ExclusiveCombine(word, word2)}'.", Vector2Int.One);
+        }
+
+        static string Reverse(string text)
+        {
+            StringBuilder sb = new StringBuilder("");
+            for (int i = text.Length; i > 0; i--)
+            {
+                sb.Append(text[i - 1]);
+            }
+            return sb.ToString();
+        }
+
+        static string Mask(string textToMask, string mask, bool keep = false)
+        {
+            StringBuilder maskedText = new StringBuilder(textToMask);
+
+            for (int i = 0; i < textToMask.Length; i++)
+            {
+                string m = mask[i].ToString();
+                bool isChar = string.IsNullOrWhiteSpace(m);
+                if (isChar == keep) // if char and keep OR if !keep and !notchar
+                {
+                    // removes character EXCEPT when mask index is space or null
+                    maskedText[i] = ' ';
+                }
+            }
+
+            return maskedText.ToString();
+        }
+
+        static string ExclusiveCombine(string text1, string text2)
+        {
+            string largerString = text1.Length >= text2.Length ? text1 : text2;
+            string smallerString = text1.Length < text2.Length ? text1 : text2;
+
+            StringBuilder sb = new StringBuilder(largerString); // starts with larger string, modifies if neccessary
+            for (int i = 0; i < smallerString.Length; i++) // we only need to modify within the smallerstring range
+            {
+                bool bigIsChar = !string.IsNullOrWhiteSpace(largerString[i].ToString());
+                bool smolIsChar = !string.IsNullOrWhiteSpace(smallerString[i].ToString());
+                if (bigIsChar == smolIsChar)
+                {
+                    // puts space if two or zero characters at index
+                    sb[i] = ' ';
+                }
+                else if (smolIsChar) // just one is character = we keep that one
+                {
+                    // reason we only check smolIsChar is because else (if bigIsChar but not smolIsChar) we just keep the big char by default
+                    sb[i] = smallerString[i];
+                }
+            }
+            return sb.ToString();
+        }
+
         #endregion
 
         #region number manipulation
@@ -206,12 +298,14 @@ namespace Methods
         {
             if (newLine)
             {
+                Console.SetCursorPosition(Console.GetCursorPosition().Left, _highestPrintDepth);
                 Console.WriteLine(message);
             }
             else
             {
                 Console.Write(message);
             }
+            _highestPrintDepth = Math.Max(_highestPrintDepth, Console.GetCursorPosition().Top);
         }
 
         static string InputLine()
