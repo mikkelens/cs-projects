@@ -223,15 +223,15 @@ namespace Methods
         static void Assignment_4()
         {
             string word = "yeah?";
-            Vector2Int reverseBoxPos = new Vector2Int(0, _highestPrintDepth + 2);
+            Vector2Int reverseBoxPos = new Vector2Int(0, _highestPrintDepth + 1);
             Box(reverseBoxPos, $"Word: '{word}', Reverse word: '{Reverse(word)}'.", Vector2Int.One);
 
             string mask = "xx  x";
-            Vector2Int maskedBoxPos = new Vector2Int(0, _highestPrintDepth + 2);
+            Vector2Int maskedBoxPos = new Vector2Int(0, _highestPrintDepth + 1);
             Box(maskedBoxPos, $"Word: '{word}', Mask: '{mask}', Masked word: '{Mask(word, mask, true)}'.", Vector2Int.One);
 
             string word2 = "g a m i n g";
-            Vector2Int exclusiveBoxPos = new Vector2Int(0, _highestPrintDepth + 2);
+            Vector2Int exclusiveBoxPos = new Vector2Int(0, _highestPrintDepth + 1);
             Box(exclusiveBoxPos, $"Word 1: '{word}', Word 2: '{word2}', Exclusive combined word: '{ExclusiveCombine(word, word2)}'.", Vector2Int.One);
         }
 
