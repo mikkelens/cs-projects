@@ -1,0 +1,16 @@
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\Animals OOP.exe
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\Animals OOP.deps.json
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\Animals OOP.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\Animals OOP.runtimeconfig.dev.json
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\Animals OOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\ref\Animals OOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\bin\Release\net5.0\Animals OOP.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\ref\Animals OOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\Animals OOP\obj\Release\net5.0\Animals OOP.genruntimeconfig.cache
