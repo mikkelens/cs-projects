@@ -1,0 +1,16 @@
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ClassesOOP.exe
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ClassesOOP.deps.json
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ClassesOOP.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ClassesOOP.runtimeconfig.dev.json
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ClassesOOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ref\ClassesOOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\bin\Debug\net5.0\ClassesOOP.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ref\ClassesOOP.dll
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\ClassesOOP\obj\Debug\net5.0\ClassesOOP.genruntimeconfig.cache
