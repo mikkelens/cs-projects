@@ -1,0 +1,16 @@
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\InterfaceIntro.exe
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\InterfaceIntro.deps.json
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\InterfaceIntro.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\InterfaceIntro.runtimeconfig.dev.json
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\InterfaceIntro.dll
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\ref\InterfaceIntro.dll
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\bin\Debug\net5.0\InterfaceIntro.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.dll
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\ref\InterfaceIntro.dll
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\InterfaceIntro\obj\Debug\net5.0\InterfaceIntro.genruntimeconfig.cache
