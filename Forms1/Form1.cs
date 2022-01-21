@@ -24,18 +24,16 @@ namespace Forms1
 
         private Label cashLabel;
         private Label tickLabel;
-        private Button manualClickButton;
 
-        private Button buyUpgradeButton;
         private Button buyClickerButton;
+        private Button buyRecursiveClickerButton;
         private void Form1_Load(object sender, EventArgs e)
         {
             cashLabel = label1;
             tickLabel = label2;
-            manualClickButton = button1;
 
-            buyUpgradeButton = button2;
             buyClickerButton = button3;
+            buyRecursiveClickerButton = button4;
 
             updater = new Timer(1000 / tickRate);
             updater.Elapsed += FixedUpdate;
@@ -48,59 +46,63 @@ namespace Forms1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            cash += clickWorth;
+            ButtonClick(1);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            BuyClicker(1);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            recursiveClicking = true;
+            cash -= 50;
+            buyRecursiveClickerButton.Enabled = false;
+        }
+
+        void ButtonClick(int clickTimes)
+        {
+            cash += 1 + clickWorth * clickTimes;
             UpdateCash();
+        }
+
+        private void BuyClicker(int amount)
+        {
+            clickers += amount;
+            cash -= 1 * amount;
         }
 
         void UpdateCash()
         {
-            label1.Text = $"Pressed button {cash} times.";
-        }
-
-        Color darkColor = Color.FromArgb(255, 16, 16, 16);
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (cash >= 3)
-            {
-                clickWorth++;
-                cash -= 3;
-            }
+            cashLabel.Text = $"Pressed button {cash} times.";
         }
 
         private int ticks = 0;
         private int clickers = 0;
         private float clickTime = 0;
+        private bool recursiveClicking;
+
         private void FixedUpdate(Object source, ElapsedEventArgs e)
         {
             ticks++;
-            clickTime += clickers / tickRate;
-            if (clickTime >= 1)
-            {
-                cash++;
-                clickTime--;
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (cash >= 5)
-            {
-                clickers++;
-                cash -= 5;
-            }
+            clickTime += (float)clickers / tickRate;
         }
 
         private void fixedDeltaTime_Tick(object sender, EventArgs e)
         {
+            if (clickTime >= 1)
+            {
+                int clickAmount = (int)clickTime;
+                ButtonClick(clickAmount);
+                if (recursiveClicking) BuyClicker(clickAmount);
+                clickTime -= clickAmount;
+            }
             UpdateCash();
             tickLabel.Text = $"TICKS: {ticks}, Pseudoseconds: {ticks / tickRate}";
 
-            if (cash < 3) buyUpgradeButton.Enabled = false;
-            else buyUpgradeButton.Enabled = true;
-
-            if (cash < 5) buyClickerButton.Enabled = false;
-            else buyClickerButton.Enabled = true;
+            buyClickerButton.Enabled = cash >= 1;
+            if (cash >= 50) buyRecursiveClickerButton.Visible = true;
         }
     }
 }
