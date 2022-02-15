@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "B1SArczov0fxbRliMPwicZSAliy0z4hhQYHXrbduyJ0j77lqWKfgdfi6SQYKEd0yo2+nPPaoLdU8rZUMLvUQxg==",
+  "dgSpecHash": "LnTG2Q3y7PxkKECtLQGu0WyhSwaptZGLiXhedPfvyrtNf5kBJsHVUYnLMw43BDtMstvgnUwj3QQ4vHIzyHDnYQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\mikke\\Desktop\\Programmering\\cs-projects\\AdventOfCode2021\\AdventOfCode2021.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\mikke\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.13\\microsoft.netcore.app.host.win-x64.5.0.13.nupkg.sha512"
+  ],
   "logs": []
 }

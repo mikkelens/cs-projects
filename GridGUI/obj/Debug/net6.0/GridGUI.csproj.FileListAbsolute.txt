@@ -1,0 +1,15 @@
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\bin\Debug\net6.0\GridGUI.exe
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\bin\Debug\net6.0\GridGUI.deps.json
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\bin\Debug\net6.0\GridGUI.runtimeconfig.json
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\bin\Debug\net6.0\GridGUI.dll
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\bin\Debug\net6.0\ref\GridGUI.dll
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\bin\Debug\net6.0\GridGUI.pdb
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.AssemblyInfo.cs
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.dll
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\ref\GridGUI.dll
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.pdb
+C:\Users\mikke\Desktop\Programmering\cs-projects\GridGUI\obj\Debug\net6.0\GridGUI.genruntimeconfig.cache
