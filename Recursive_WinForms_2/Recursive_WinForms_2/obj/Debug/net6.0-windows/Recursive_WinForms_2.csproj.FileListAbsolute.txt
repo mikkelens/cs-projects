@@ -1,0 +1,15 @@
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\bin\Debug\net6.0-windows\Recursive_WinForms_2.exe
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\bin\Debug\net6.0-windows\Recursive_WinForms_2.deps.json
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\bin\Debug\net6.0-windows\Recursive_WinForms_2.runtimeconfig.json
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\bin\Debug\net6.0-windows\Recursive_WinForms_2.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\bin\Debug\net6.0-windows\Recursive_WinForms_2.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.csproj.AssemblyReference.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.AssemblyInfoInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.AssemblyInfo.cs
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.csproj.CoreCompileInputs.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\refint\Recursive_WinForms_2.dll
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.pdb
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\Recursive_WinForms_2.genruntimeconfig.cache
+C:\Users\mikke\Desktop\c#\cs-projects\Recursive_WinForms_2\Recursive_WinForms_2\obj\Debug\net6.0-windows\ref\Recursive_WinForms_2.dll
