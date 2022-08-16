@@ -4,6 +4,19 @@ namespace Recursive_WinForms
 {
     public partial class Form1 : Form
     {
+        private static readonly List<Color> OrderedColors = new List<Color> // has 6+ colors, can draw 6+ levels
+        {
+            Color.Red,
+            Color.Blue,
+            Color.Green,
+            Color.Yellow,
+            Color.Orange,
+            Color.Brown,
+            Color.Purple,
+            Color.Magenta,
+            Color.Pink
+        };
+        
         public Form1()
         {
             InitializeComponent();
@@ -18,19 +31,6 @@ namespace Recursive_WinForms
 
         private void Opgave1()
         {
-            List<Color> orderedColors = new List<Color> // has 6+ colors, can draw 6+ levels
-            {
-                Color.Red,
-                Color.Blue,
-                Color.Green,
-                Color.Yellow,
-                Color.Orange,
-                Color.Brown,
-                Color.Purple,
-                Color.Magenta,
-                Color.Pink
-            };
-            
             Graphics graphics = CreateGraphics();
             Pen pen = new Pen(Color.Black); // color and width changed dynamically depending on level
 
@@ -44,7 +44,7 @@ namespace Recursive_WinForms
                 if (level < 0) return; // go back up
 
                 // draw itself
-                pen.Color = orderedColors[totalLevelCount - (1 + level)];
+                pen.Color = OrderedColors[totalLevelCount - (1 + level)];
                 pen.Width = level * 2;
                 graphics.DrawRectangle(pen, frame);
                 
@@ -67,6 +67,10 @@ namespace Recursive_WinForms
             }
         }
 
+        private void Opgave2()
+        {
+            
+        }
 
         private static void DrawRectangleLocationAsCenter(Graphics graphics, Pen pen, Rectangle rect)
         {
