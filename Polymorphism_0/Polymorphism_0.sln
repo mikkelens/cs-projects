@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polymorphism_0", "Polymorphism_0.csproj", "{546DC92C-92A1-49AC-8255-B86E4EFD063E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{546DC92C-92A1-49AC-8255-B86E4EFD063E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{546DC92C-92A1-49AC-8255-B86E4EFD063E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{546DC92C-92A1-49AC-8255-B86E4EFD063E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{546DC92C-92A1-49AC-8255-B86E4EFD063E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
