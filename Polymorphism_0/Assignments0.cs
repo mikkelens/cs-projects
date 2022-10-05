@@ -1,6 +1,6 @@
 ﻿namespace Polymorphism_0;
 
-public static class Assignments
+public static class Assignments0
 {
 	// 1)
 	private static int Smallest(this int[] numbers)

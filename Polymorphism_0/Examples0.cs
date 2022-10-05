@@ -3,7 +3,7 @@
 namespace Polymorphism_0;
 
 [SuppressMessage("ReSharper", "UnusedMember.Local")]
-public static class Examples
+public static class Examples0
 {
 	public static void Run()
 	{
