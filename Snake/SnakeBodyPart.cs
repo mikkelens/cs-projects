@@ -3,31 +3,42 @@
 // body of the snake. also inhereted for head
 public class SnakeBodyPart
 {
-	protected virtual char DisplayChar => 'o';
+	public (int x, int y) Position { get; private set; }
 
 	private SnakeBodyPart? _nextBodyPart;
 
-	protected (int x, int y) Position { get; private set; }
+	private protected virtual char DisplayChar => 'o';
 
-	protected SnakeBodyPart((int, int) pos, int extraParts = 0)
+	protected SnakeBodyPart((int, int) spawnPos, int extraParts = 0)
 	{
-		Position = pos;
+		// Debug.TemporaryPauseLog($"Spawned Snake body part at Position: {spawnPos.ToString()}", 0.75f);
+		SnakeHead.BodyParts.Add(this);
+		Position = spawnPos;
 		if (extraParts > 0)
 		{
-			_nextBodyPart = new SnakeBodyPart(pos, extraParts - 1);
+			_nextBodyPart = new SnakeBodyPart(spawnPos, extraParts - 1);
 		}
+		// else
+		// {
+		// 	Debug.TemporaryPauseLog("No more body parts to spawn.", 0.5f);
+		// }
 	}
 
+
 	// move with body to position
-	protected virtual void Move((int, int) newPos)
+	public virtual void MoveDirection((int x, int y) direction)
 	{
-		ClearAtConsolePosition(Position);
-		if (_nextBodyPart != null)
+		(int x, int y) prevPos = Position;
+		Position = (Position.x + direction.x, Position.y + direction.y);
+		ClearAtConsolePosition(prevPos); // clear this position
+		if (_nextBodyPart != null && _nextBodyPart.Position != prevPos)
 		{
-			_nextBodyPart.Move(Position); // remaining body follows this body part
+			(int x, int y) bodyPartPos = _nextBodyPart.Position;
+			(int, int) directionToPrev = (prevPos.x - bodyPartPos.x, prevPos.y - bodyPartPos.y);
+			_nextBodyPart.MoveDirection(directionToPrev); // remaining body follows this body part
 		}
-		Position = newPos;
-		DisplayAtConsolePosition(Position);
+		DisplayAtConsolePosition(Position); // display top last (head on top)
+		// Debug.TemporaryPauseLog($"Moving snake body part from {Position} to {newPos}");
 	}
 
 	public void Grow()
