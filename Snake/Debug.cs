@@ -1,22 +1,23 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace Snake;
 
-namespace Snake;
-
-[SuppressMessage("ReSharper", "UnusedType.Global")]
-[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+// [SuppressMessage("ReSharper", "UnusedType.Global")]
+// [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Debug
 {
-	public static (int x, int y) WritePosition { private get; set; } = (0, 0);
+	private static readonly (int x, int y) PauseIndicatorPosition = (Game.AreaSizes.width + 3, 2);
+	private const string PauseString = "PAUSED!";
+	private const string UnpausedString = "PLAYING...";
 
-	public static void Log(string msg)
+	public static (int x, int y) DebugWritePosition { private get; set; } = (0, 0);
+
+	private static void Log(string msg)
 	{
-		Console.SetCursorPosition(WritePosition.x, WritePosition.y);
-		Console.WriteLine(msg);
+		WriteAtPosition(msg, DebugWritePosition);
 	}
-	public static void LogAndPauseForSeconds(string msg, float seconds = 1)
+	private static void LogAndPauseForSeconds(string msg, float seconds = 1)
 	{
 		Log(msg);
-		Thread.Sleep((int)(seconds * 1000));
+		PauseForSeconds(seconds);
 	}
 
 	public static void TemporaryPauseLog(string msg, float seconds = 1)
@@ -26,8 +27,21 @@ public static class Debug
 		Thread.Sleep(100);
 	}
 
+	public static void PauseForSeconds(float seconds)
+	{
+		WriteAtPosition(PauseString, PauseIndicatorPosition);
+		Thread.Sleep((int)(seconds * 1000));
+		WriteAtPosition(UnpausedString, PauseIndicatorPosition);
+	}
+
 	public static void ClearAmount(int msgLength)
 	{
 		Log(new string(' ', msgLength));
+	}
+
+	private static void WriteAtPosition(string msg, (int x, int y) position)
+	{
+		Console.SetCursorPosition(position.x, position.y);
+		Console.WriteLine(msg);
 	}
 }

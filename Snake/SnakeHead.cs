@@ -27,7 +27,7 @@ public class SnakeHead : SnakeBodyPart
 	}
 	private bool IsWithinBounds()
 	{
-		(int width, int height) bounds = Program.AreaSizes;
+		(int width, int height) bounds = Game.AreaSizes;
 		if (Position.x <= 0 || Position.x >= bounds.width)
 		{
 			return false;
