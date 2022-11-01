@@ -1,47 +1,92 @@
 ﻿namespace Snake;
 
-// [SuppressMessage("ReSharper", "UnusedType.Global")]
-// [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public static class Debug
 {
+#region Constants etc
 	private static readonly (int x, int y) PauseIndicatorPosition = (Game.AreaSizes.width + 3, 2);
 	private const string PauseString = "PAUSED!";
 	private const string UnpausedString = "PLAYING...";
+#endregion
 
-	public static (int x, int y) DebugWritePosition { private get; set; } = (0, 0);
+#region Computed positions
+	private static (int x, int y) LogWritePosition => (PauseIndicatorPosition.x, PauseIndicatorPosition.y + 2);
+	private static (int x, int y) InputRequestWritePosition => (LogWritePosition.x, LogWritePosition.y + 1);
+#endregion
 
-	private static void Log(string msg)
+#region Extension methods
+	private static string AsSpaces(this string msg)
 	{
-		WriteAtPosition(msg, DebugWritePosition);
+		return new string(' ', msg.Length);
 	}
-	private static void LogAndPauseForSeconds(string msg, float seconds = 1)
-	{
-		Log(msg);
-		PauseForSeconds(seconds);
-	}
+#endregion
 
-	public static void TemporaryPauseLog(string msg, float seconds = 1)
+#region State etc
+	private static bool _paused;
+	private static bool Paused
 	{
-		LogAndPauseForSeconds(msg, seconds);
-		ClearAmount(msg.Length);
-		Thread.Sleep(100);
-	}
-
-	public static void PauseForSeconds(float seconds)
-	{
-		WriteAtPosition(PauseString, PauseIndicatorPosition);
-		Thread.Sleep((int)(seconds * 1000));
-		WriteAtPosition(UnpausedString, PauseIndicatorPosition);
-	}
-
-	public static void ClearAmount(int msgLength)
-	{
-		Log(new string(' ', msgLength));
+		set
+		{
+			_paused = value;
+			ClearLineAtPosition(PauseIndicatorPosition);
+			WriteAtPosition(_paused ? PauseString : UnpausedString, PauseIndicatorPosition);
+		}
 	}
 
+#endregion
+
+#region Private
 	private static void WriteAtPosition(string msg, (int x, int y) position)
 	{
 		Console.SetCursorPosition(position.x, position.y);
 		Console.WriteLine(msg);
 	}
+	private static void Log(string msg)
+	{
+		ClearLineAtPosition(LogWritePosition);
+		WriteAtPosition(msg, LogWritePosition);
+	}
+	private static void ClearMessageFromPosition(string msg, (int x, int y) position)
+	{
+		WriteAtPosition(msg.AsSpaces(), position);
+	}
+	private static void ClearLineAtPosition((int x, int y) position)
+	{
+		WriteAtPosition(new string(' ', Console.WindowWidth - position.x), position);
+	}
+	private static void LogAndPauseForSeconds(string msg, float seconds = 1)
+	{
+		Log(msg);
+		PauseForSeconds(seconds);
+		// does not clear itself afterwards on its own
+	}
+	private static void PauseForSeconds(float seconds)
+	{
+		Paused = true;
+		Thread.Sleep((int)(seconds * 1000));
+		Paused = false;
+	}
+	private static void PauseUntillEnter()
+	{
+		Paused = true;
+		const string continueText = "Press enter to continue.";
+		WriteAtPosition(continueText, InputRequestWritePosition);
+		Console.ReadLine();
+		ClearMessageFromPosition(continueText, InputRequestWritePosition);
+		Paused = false;
+	}
+#endregion
+
+#region Accessible (public) debug tools
+	public static void TemporaryPauseLog(string msg, float seconds = 1)
+	{
+		LogAndPauseForSeconds(msg, seconds);
+		ClearMessageFromPosition(msg, LogWritePosition); // clears afterwards
+	}
+	public static void WaitingPauseLog(string msg)
+	{
+		Log(msg);
+		PauseUntillEnter();
+		ClearMessageFromPosition(msg, LogWritePosition);
+	}
+#endregion
 }

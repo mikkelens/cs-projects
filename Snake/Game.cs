@@ -2,43 +2,48 @@
 
 public static class Game
 {
+	private static Random _random = new Random();
+
 	public static readonly (int width, int height) AreaSizes = (30, 15); // cant be const because c# lol
+
+	private static SnakeHead _snake = null!;
+	public static (int x, int y) ApplePosition { get; private set; }
 
 	public static void Run()
 	{
 		Console.CursorVisible = false;
 
 		DrawBorder(AreaSizes);
-		Debug.DebugWritePosition = (0, AreaSizes.height + 6);
 
 		const int startX = 5;
 		const int startY = 5;
 		const int startLength = 3;
-		SnakeHead snake = new SnakeHead((startX, startY), startLength);
+		_snake = new SnakeHead((startX, startY), startLength);
 
 		bool alive = true;
 
-		const int startUpdateRate = 25;
+		const int startUpdateRate = 10;
 		int updateRate = startUpdateRate; // todo: should get faster with more fruits eaten
 		while (alive)
 		{
 			// frame update delay
-			float deltaTime = 1f / updateRate;
+			double deltaTime = 0.0 / updateRate;
 			Thread.Sleep((int)(deltaTime * 1000));
 
 			(int, int)? newInput = ReadNewInput();
 			if (newInput != null)
 			{
-				snake.MoveDirection(newInput.Value);
+				_snake.MoveDirection(newInput.Value);
 				// Debug.TemporaryPauseLog($"INPUT RECEIVED. MOVEINPUT: {newInput.Value}", 0.75f);
 			}
 			else
 			{
-				snake.MovePreviousDirection();
+				_snake.MovePreviousDirection();
 				// Debug.TemporaryPauseLog($"NO INPUT. PREVIOUS: {_lastMove}", 0.75f);
 			}
 
-			if (snake.CollisionCheck()) alive = false;
+			if (_snake.CheckForApple()) ConsumeApple();
+			if (_snake.CollisionCheck()) alive = false;
 
 			(int, int)? ReadNewInput()
 			{
@@ -90,5 +95,15 @@ public static class Game
 				Console.Write(line);
 			}
 		}
+	}
+
+	private static void ConsumeApple()
+	{
+		_snake.Grow();
+		SpawnNewApple();
+	}
+	private static void SpawnNewApple()
+	{
+		ApplePosition = (_random.Next(AreaSizes.width) + 1, _random.Next(AreaSizes.height) + 1);
 	}
 }

@@ -6,7 +6,7 @@ public class SnakeHead : SnakeBodyPart
 
 	private protected override char DisplayChar => 'O';
 
-	private (int, int) _lastDirection = (0, 0); // moves left by default
+	private (int, int) _lastDirection = (1, 0); // moves left by default
 
 	public void MovePreviousDirection()
 	{
@@ -21,11 +21,25 @@ public class SnakeHead : SnakeBodyPart
 	public bool CollisionCheck()
 	{
 		if (_lastDirection == (0, 0)) return false;
-		if (!IsWithinBounds()) return true;
-		if (HasHitBodyPart()) return true;
+		if (!CheckForBounds())
+		{
+			Debug.WaitingPauseLog("Ran outside borders!");
+			return true;
+		}
+		if (CheckForBodyPart())
+		{
+			Debug.WaitingPauseLog("Hit body part!");
+			return true;
+		}
 		return false;
 	}
-	private bool IsWithinBounds()
+
+	public bool CheckForApple()
+	{
+		return Game.ApplePosition == Position;
+	}
+
+	private bool CheckForBounds()
 	{
 		(int width, int height) bounds = Game.AreaSizes;
 		if (Position.x <= 0 || Position.x >= bounds.width)
@@ -38,7 +52,7 @@ public class SnakeHead : SnakeBodyPart
 		}
 		return true;
 	}
-	private bool HasHitBodyPart()
+	private bool CheckForBodyPart()
 	{
 		if (BodyParts.Any(bodyPart => bodyPart.Position == Position))
 		{
