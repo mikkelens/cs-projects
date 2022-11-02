@@ -3,7 +3,6 @@
 public static class Debug
 {
 #region Constants etc
-	private static readonly (int x, int y) PauseIndicatorPosition = (Game.AreaSizes.width + 3, 2);
 	private const string PauseString = "PAUSED!";
 	private const string UnpausedString = "PLAYING...";
 #endregion
@@ -11,6 +10,7 @@ public static class Debug
 #region Computed positions
 	private static (int x, int y) LogWritePosition => (PauseIndicatorPosition.x, PauseIndicatorPosition.y + 2);
 	private static (int x, int y) InputRequestWritePosition => (LogWritePosition.x, LogWritePosition.y + 1);
+	private static (int x, int y) PauseIndicatorPosition => (Game.Board.DrawPositionWithinArea(Game.Board.Sizes).x + 3, 2);
 #endregion
 
 #region Extension methods
@@ -77,6 +77,7 @@ public static class Debug
 #endregion
 
 #region Accessible (public) debug tools
+	// ReSharper disable UnusedMember.Global
 	public static void TemporaryPauseLog(string msg, float seconds = 1)
 	{
 		LogAndPauseForSeconds(msg, seconds);
@@ -88,5 +89,6 @@ public static class Debug
 		PauseUntillEnter();
 		ClearMessageFromPosition(msg, LogWritePosition);
 	}
+	// ReSharper restore UnusedMember.Global
 #endregion
 }

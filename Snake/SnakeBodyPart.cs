@@ -1,66 +1,52 @@
 ﻿namespace Snake;
 
 // body of the snake. also inhereted for head
-public class SnakeBodyPart
+public class SnakeBodyPart : CoordinateObject
 {
-	public (int x, int y) Position { get; private set; }
+	public bool NewlySpawned { get; private set; }
 
 	private SnakeBodyPart? _nextBodyPart;
 
-	private protected virtual char DisplayChar => 'o';
+	private protected override char DisplayChar => 'o';
 
-	protected SnakeBodyPart((int, int) spawnPos, int extraParts = 0)
+	protected SnakeBodyPart((int, int) spawnPos, int extraParts = 0) : base(spawnPos)
 	{
-		// Debug.TemporaryPauseLog($"Spawned Snake body part at Position: {spawnPos.ToString()}", 0.75f);
+		NewlySpawned = true;
 		SnakeHead.BodyParts.Add(this);
-		Position = spawnPos;
 		if (extraParts > 0)
 		{
 			_nextBodyPart = new SnakeBodyPart(spawnPos, extraParts - 1);
 		}
-		// else
-		// {
-		// 	Debug.TemporaryPauseLog("No more body parts to spawn.", 0.5f);
-		// }
 	}
-
 
 	// move with body to position
 	public virtual void MoveDirection((int x, int y) direction)
 	{
-		(int x, int y) prevPos = Position;
-		Position = (Position.x + direction.x, Position.y + direction.y);
-		ClearAtConsolePosition(prevPos); // clear this position
-		if (_nextBodyPart != null && _nextBodyPart.Position != prevPos)
+		if (NewlySpawned) NewlySpawned = false; // todo: make this check work
+
+		(int x, int y) previousPos = Position;
+		Position = (Position.x + direction.x, Position.y + direction.y); // move to next position
+
+		if (_nextBodyPart != null && _nextBodyPart.Position != previousPos) // next body part in chain was not on inside of us
 		{
 			(int x, int y) bodyPartPos = _nextBodyPart.Position;
-			(int, int) directionToPrev = (prevPos.x - bodyPartPos.x, prevPos.y - bodyPartPos.y);
-			_nextBodyPart.MoveDirection(directionToPrev); // remaining body follows this body part
+			(int, int) directionToPreviousPosition = (previousPos.x - bodyPartPos.x, previousPos.y - bodyPartPos.y);
+			_nextBodyPart.MoveDirection(directionToPreviousPosition); // remaining body parts follow this body part (in a chain)
 		}
-		DisplayAtConsolePosition(Position); // display top last (head on top)
 		// Debug.TemporaryPauseLog($"Moving snake body part from {Position} to {newPos}");
 	}
 
-	public void Grow()
+	public void GrowAtEndOfSnake()
 	{
-		if (_nextBodyPart == null)
+		if (_nextBodyPart == null) // reach end of chain?
 		{
+			// grow
 			_nextBodyPart = new SnakeBodyPart(Position);
 		}
 		else
 		{
-			_nextBodyPart.Grow();
+			// send down chain
+			_nextBodyPart.GrowAtEndOfSnake();
 		}
-	}
-
-	private void ClearAtConsolePosition((int x, int y) pos)
-	{
-		Console.SetCursorPosition(pos.x, pos.y);
-		Console.Write(' ');
-	}
-	private void DisplayAtConsolePosition((int x, int y) pos)
-	{
-		Console.SetCursorPosition(pos.x, pos.y);
-		Console.Write(DisplayChar);
 	}
 }

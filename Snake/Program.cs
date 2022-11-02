@@ -4,9 +4,13 @@ internal static class Program
 {
 	public static void Main()
 	{
-		Game.Run();
-		Console.WriteLine("You died.");
-		Console.WriteLine("Press enter to exit.");
-		Console.ReadLine(); // enter before exit
+		do
+		{
+			Game.Run();
+		} while (UserInput.BoolAskUser("Do you want to play again? (Y/N)"));
+
+		Console.Clear();
+		Console.WriteLine("Closing...");
 	}
+
 }

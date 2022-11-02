@@ -2,108 +2,98 @@
 
 public static class Game
 {
-	private static Random _random = new Random();
+	private const int AreaWidth = 20;
+	private const int AreaHeight = 10;
+	public static readonly Area Board = new Area((AreaWidth, AreaHeight), (0, 0)); // cant be const because c# tuple lol
 
-	public static readonly (int width, int height) AreaSizes = (30, 15); // cant be const because c# lol
+	private const int StartUpdateRate = 5;
 
-	private static SnakeHead _snake = null!;
-	public static (int x, int y) ApplePosition { get; private set; }
+	private static int _updateRate;
+	private static SnakeHead _snakeHead = null!;
+	public static Apple CurrentApple { get; private set; } = null!;
+
+	private static readonly Random Random = new Random();
 
 	public static void Run()
 	{
 		Console.CursorVisible = false;
+		Console.Clear();
 
-		DrawBorder(AreaSizes);
+		Board.DrawBorder(); // todo fix
 
-		const int startX = 5;
-		const int startY = 5;
+		const int startX = 1;
+		const int startY = 1;
 		const int startLength = 3;
-		_snake = new SnakeHead((startX, startY), startLength);
+		_snakeHead = new SnakeHead((startX, startY), startLength);
+		CurrentApple = SpawnNewApple();
 
 		bool alive = true;
 
-		const int startUpdateRate = 10;
-		int updateRate = startUpdateRate; // todo: should get faster with more fruits eaten
+
+		_updateRate = StartUpdateRate;
 		while (alive)
 		{
 			// frame update delay
-			double deltaTime = 0.0 / updateRate;
+			double deltaTime = 1.0 / _updateRate;
 			Thread.Sleep((int)(deltaTime * 1000));
 
 			(int, int)? newInput = ReadNewInput();
 			if (newInput != null)
 			{
-				_snake.MoveDirection(newInput.Value);
-				// Debug.TemporaryPauseLog($"INPUT RECEIVED. MOVEINPUT: {newInput.Value}", 0.75f);
+				(int, int) direction = newInput.Value;
+				if (_snakeHead.CanMoveDirection(direction))
+				{
+					_snakeHead.MoveDirection(direction);
+				}
 			}
 			else
 			{
-				_snake.MovePreviousDirection();
-				// Debug.TemporaryPauseLog($"NO INPUT. PREVIOUS: {_lastMove}", 0.75f);
+				_snakeHead.MovePreviousDirection();
 			}
 
-			if (_snake.CheckForApple()) ConsumeApple();
-			if (_snake.CollisionCheck()) alive = false;
-
-			(int, int)? ReadNewInput()
-			{
-				ConsoleKeyInfo? lastKey = null;
-				while (Console.KeyAvailable)
-				{
-					lastKey = Console.ReadKey(true);
-				}
-				if (lastKey == null) return null;
-				(int x, int y)? input = lastKey.Value.Key switch
-				{
-					ConsoleKey.UpArrow => (0, -1),
-					ConsoleKey.W => (0, -1),
-					ConsoleKey.DownArrow => (0, 1),
-					ConsoleKey.S => (0, 1),
-					ConsoleKey.LeftArrow => (-1, 0),
-					ConsoleKey.A => (-1, 0),
-					ConsoleKey.RightArrow => (1, 0),
-					ConsoleKey.D => (1, 0),
-					_ => null
-				};
-				// get rid of previous key info (only allow new keypresses to be used)
-				// if (key == null || key.Value == _lastMove) return null;
-				// if (key.Value.x == _lastMove.x) key = (0, key.Value.y);
-				// else if (key.Value.y == _lastMove.y) key = (key.Value.x, 0);
-				return input;
-			}
+			if (_snakeHead.CheckForApple()) ConsumeApple();
+			if (_snakeHead.CollisionCheck()) alive = false;
 		}
 
-		Console.SetCursorPosition(0, AreaSizes.height + 1);
+		Console.SetCursorPosition(0, Board.DrawSizes.height);
+		Console.WriteLine("You died.");
 	}
 
-	private static void DrawBorder((int width, int height) sizes)
+	private static (int, int)? ReadNewInput()
 	{
-		for (int y = 0; y < sizes.height; y++)
+		ConsoleKeyInfo? latestKey = null;
+		while (Console.KeyAvailable)
 		{
-			Console.SetCursorPosition(0, y);
-			if (y == 0 || y == sizes.height - 1)
-			{
-				// top/bottom
-				string line = new string('-', sizes.width);
-				Console.Write(line);
-			}
-			else
-			{
-				// sides
-				string space = new string(' ', sizes.width - 2);
-				string line = $"|{space}|";
-				Console.Write(line);
-			}
+			// We only remember the latest keypress, so that no queue of inputs is formed.
+			// The issue with this is that queues are needed at low framerates/updates.
+			latestKey = Console.ReadKey(true);
 		}
+		if (latestKey == null) return null;
+		(int x, int y)? input = latestKey.Value.Key switch
+		{
+			ConsoleKey.UpArrow => (0, -1),
+			ConsoleKey.W => (0, -1),
+			ConsoleKey.DownArrow => (0, 1),
+			ConsoleKey.S => (0, 1),
+			ConsoleKey.LeftArrow => (-1, 0),
+			ConsoleKey.A => (-1, 0),
+			ConsoleKey.RightArrow => (1, 0),
+			ConsoleKey.D => (1, 0),
+			_ => null
+		};
+		return input;
 	}
 
 	private static void ConsumeApple()
 	{
-		_snake.Grow();
-		SpawnNewApple();
+		_snakeHead.GrowAtEndOfSnake();
+		_updateRate++;
+		CurrentApple = SpawnNewApple();
+
 	}
-	private static void SpawnNewApple()
+	private static Apple SpawnNewApple()
 	{
-		ApplePosition = (_random.Next(AreaSizes.width) + 1, _random.Next(AreaSizes.height) + 1);
+		(int, int) newRandomPosition = (Random.Next(Board.Sizes.width), Random.Next(Board.Sizes.height));
+		return new Apple(newRandomPosition);
 	}
 }
