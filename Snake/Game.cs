@@ -2,6 +2,7 @@
 
 public static class Game
 {
+	// Todo: improve display formatting so that game can have proper square pixels
 	private const int AreaWidth = 20;
 	private const int AreaHeight = 10;
 	public static readonly Area Board = new Area((AreaWidth, AreaHeight), (0, 0)); // cant be const because c# tuple lol
@@ -20,15 +21,13 @@ public static class Game
 		Console.CursorVisible = false;
 		Console.Clear();
 
-		Board.DrawBorder(); // todo fix
+		Board.DrawBorder();
 
 		const int startX = 1;
 		const int startY = 1;
 		const int startLength = 3;
 		CurrentApple = SpawnNewApple();
 		_snakeHead = new SnakeHead((startX, startY), startLength);
-
-		_snakeHead.Alive = true;
 
 		_updateRate = StartMoveSpeed;
 		DateTime lastMeasuredTime = DateTime.Now;

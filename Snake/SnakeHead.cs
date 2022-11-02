@@ -17,7 +17,11 @@ public class SnakeHead : SnakeBodyPart
 
 	private protected override char DisplayChar => Alive ? 'O' : 'X';
 
-	public SnakeHead((int, int) spawnPos, int extraParts = 0) : base(spawnPos, extraParts) { } // identical to body constructor
+	// identical to body constructor, but with "alive" state
+	public SnakeHead((int, int) spawnPos, int extraParts = 0) : base(spawnPos, extraParts)
+	{
+		Alive = true;
+	}
 
 	private (int x, int y) _lastDirection = (1, 0); // moves left by default
 

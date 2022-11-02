@@ -29,7 +29,7 @@ public class SnakeBodyPart : CoordinateObject
 	// move with body to position
 	public virtual void MoveDirection((int x, int y) direction)
 	{
-		if (NewlySpawned) NewlySpawned = false; // todo: make this check work
+		if (NewlySpawned) NewlySpawned = false;
 
 		(int x, int y) previousPos = Position;
 		Position = (Position.x + direction.x, Position.y + direction.y); // move to next position
