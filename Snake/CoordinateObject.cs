@@ -14,16 +14,17 @@ public abstract class CoordinateObject
 			DisplayAtPosition();
 		}
 	}
-	public void Redraw()
-	{
-		DisplayAtPosition();
-	}
-
-	private protected virtual char DisplayChar => 'X'; // default "missing texture" heh
 
 	protected CoordinateObject((int, int) position)
 	{
 		Position = position;
+	}
+
+	private protected virtual char DisplayChar => 'X'; // default "missing texture" heh
+
+	private protected void Redraw()
+	{
+		DisplayAtPosition();
 	}
 
 	private void ClearAtPosition()
