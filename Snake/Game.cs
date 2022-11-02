@@ -6,9 +6,9 @@ public static class Game
 	private const int AreaHeight = 10;
 	public static readonly Area Board = new Area((AreaWidth, AreaHeight), (0, 0)); // cant be const because c# tuple lol
 
-	private const int StartUpdateRate = 5;
+	private const float StartMoveSpeed = 5f;
 
-	private static int _updateRate;
+	private static float _moveSpeed;
 	private static SnakeHead _snakeHead = null!;
 	public static Apple CurrentApple { get; private set; } = null!;
 
@@ -27,14 +27,14 @@ public static class Game
 		_snakeHead = new SnakeHead((startX, startY), startLength);
 		CurrentApple = SpawnNewApple();
 
-		bool alive = true;
+		_snakeHead.Alive = true;
 
 
-		_updateRate = StartUpdateRate;
-		while (alive)
+		_moveSpeed = StartMoveSpeed;
+		while (_snakeHead.Alive)
 		{
 			// frame update delay
-			double deltaTime = 1.0 / _updateRate;
+			double deltaTime = 1.0 / _moveSpeed;
 			Thread.Sleep((int)(deltaTime * 1000));
 
 			(int, int)? newInput = ReadNewInput();
@@ -52,7 +52,7 @@ public static class Game
 			}
 
 			if (_snakeHead.CheckForApple()) ConsumeApple();
-			if (_snakeHead.CollisionCheck()) alive = false;
+			if (_snakeHead.CollisionCheck()) _snakeHead.Alive = false;
 		}
 
 		Console.SetCursorPosition(0, Board.DrawSizes.height);
@@ -87,7 +87,7 @@ public static class Game
 	private static void ConsumeApple()
 	{
 		_snakeHead.GrowAtEndOfSnake();
-		_updateRate++;
+		_moveSpeed += 0.25f;
 		CurrentApple = SpawnNewApple();
 
 	}

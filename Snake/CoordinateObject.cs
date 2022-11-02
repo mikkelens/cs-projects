@@ -14,6 +14,10 @@ public abstract class CoordinateObject
 			DisplayAtPosition();
 		}
 	}
+	public void Redraw()
+	{
+		DisplayAtPosition();
+	}
 
 	private protected virtual char DisplayChar => 'X'; // default "missing texture" heh
 

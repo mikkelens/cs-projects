@@ -4,7 +4,18 @@ public class SnakeHead : SnakeBodyPart
 {
 	public static readonly List<SnakeBodyPart> BodyParts = new List<SnakeBodyPart>();
 
-	private protected override char DisplayChar => 'O';
+	private bool _alive;
+	public bool Alive
+	{
+		get => _alive;
+		set
+		{
+			_alive = value;
+			Redraw();
+		}
+	}
+
+	private protected override char DisplayChar => Alive ? 'O' : 'X';
 
 	public SnakeHead((int, int) spawnPos, int extraParts = 0) : base(spawnPos, extraParts) { } // identical to body constructor
 
