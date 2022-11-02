@@ -54,18 +54,10 @@ public class SnakeHead : SnakeBodyPart
 		}
 		return false;
 	}
-	public bool CheckForApple()
-	{
-		return Game.CurrentApple.Position == Position;
-	}
+
 	private bool CheckForBodyPart()
 	{
-		if (BodyParts.Where(bodyPart => bodyPart != this).Any(bodyPart => Position == bodyPart.Position && !bodyPart.NewlySpawned))
-		{
-			Debug.TemporaryPauseLog("Hit body part!");
-			return true;
-		}
-		return false;
+		return BodyParts.Where(bodyPart => bodyPart != this).Any(bodyPart => Position == bodyPart.Position && !bodyPart.NewlySpawned);
 	}
 #endregion
 }

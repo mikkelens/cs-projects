@@ -6,9 +6,10 @@ public static class Game
 	private const int AreaHeight = 10;
 	public static readonly Area Board = new Area((AreaWidth, AreaHeight), (0, 0)); // cant be const because c# tuple lol
 
-	private const float StartMoveSpeed = 5f;
+	private const float StartMoveSpeed = 4f;
 
-	private static float _moveSpeed;
+	private static float _updateRate;
+	private static double DesiredFrameTime => 1000.0 / _updateRate; // In milliseconds
 	private static SnakeHead _snakeHead = null!;
 	public static Apple CurrentApple { get; private set; } = null!;
 
@@ -24,23 +25,35 @@ public static class Game
 		const int startX = 1;
 		const int startY = 1;
 		const int startLength = 3;
-		_snakeHead = new SnakeHead((startX, startY), startLength);
 		CurrentApple = SpawnNewApple();
+		_snakeHead = new SnakeHead((startX, startY), startLength);
 
 		_snakeHead.Alive = true;
 
-
-		_moveSpeed = StartMoveSpeed;
+		_updateRate = StartMoveSpeed;
+		DateTime lastMeasuredTime = DateTime.Now;
+		List<InputData> inputs = new List<InputData>();
 		while (_snakeHead.Alive)
 		{
-			// frame update delay
-			double deltaTime = 1.0 / _moveSpeed;
-			Thread.Sleep((int)(deltaTime * 1000));
+			// process inputs //
 
-			(int, int)? newInput = ReadNewInput();
-			if (newInput != null)
+			// clear old inputs (older than 2 frames, allowing for a buffer of 2 inputs)
+			inputs.RemoveAll(input => input.TimeSince().TotalMilliseconds > DesiredFrameTime * 2);
+			while (Console.KeyAvailable) // get new inputs
 			{
-				(int, int) direction = newInput.Value;
+				inputs.Add(new InputData(DateTime.Now, Console.ReadKey(true).Key));
+			}
+
+			// update game if frametime has passed, else read new inputs untill true
+			if ((DateTime.Now - lastMeasuredTime).TotalMilliseconds < DesiredFrameTime) continue;
+
+			// Game tick
+
+			if (inputs.Count != 0)
+			{
+				InputData oldestInput = inputs[0];
+				inputs.RemoveAt(0); // remove used input
+				(int, int) direction = DirectionFromKey(oldestInput.Key);
 				if (_snakeHead.CanMoveDirection(direction))
 				{
 					_snakeHead.MoveDirection(direction);
@@ -53,23 +66,17 @@ public static class Game
 
 			if (_snakeHead.CheckForApple()) ConsumeApple();
 			if (_snakeHead.CollisionCheck()) _snakeHead.Alive = false;
+
+			lastMeasuredTime = DateTime.Now;
 		}
 
 		Console.SetCursorPosition(0, Board.DrawSizes.height);
 		Console.WriteLine("You died.");
 	}
 
-	private static (int, int)? ReadNewInput()
+	private static (int, int) DirectionFromKey(ConsoleKey input)
 	{
-		ConsoleKeyInfo? latestKey = null;
-		while (Console.KeyAvailable)
-		{
-			// We only remember the latest keypress, so that no queue of inputs is formed.
-			// The issue with this is that queues are needed at low framerates/updates.
-			latestKey = Console.ReadKey(true);
-		}
-		if (latestKey == null) return null;
-		(int x, int y)? input = latestKey.Value.Key switch
+		return input switch
 		{
 			ConsoleKey.UpArrow => (0, -1),
 			ConsoleKey.W => (0, -1),
@@ -79,15 +86,14 @@ public static class Game
 			ConsoleKey.A => (-1, 0),
 			ConsoleKey.RightArrow => (1, 0),
 			ConsoleKey.D => (1, 0),
-			_ => null
+			_ => default
 		};
-		return input;
 	}
 
 	private static void ConsumeApple()
 	{
 		_snakeHead.GrowAtEndOfSnake();
-		_moveSpeed += 0.25f;
+		_updateRate += 0.75f;
 		CurrentApple = SpawnNewApple();
 
 	}

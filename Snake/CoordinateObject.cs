@@ -32,7 +32,7 @@ public abstract class CoordinateObject
 		Game.Board.SetCursorToDrawPosition(Position);
 		Console.Write(' ');
 	}
-	private void DisplayAtPosition()
+	private protected virtual void DisplayAtPosition()
 	{
 		Game.Board.SetCursorToDrawPosition(Position);
 		Console.Write(DisplayChar);

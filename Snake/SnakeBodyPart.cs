@@ -8,6 +8,13 @@ public class SnakeBodyPart : CoordinateObject
 	private SnakeBodyPart? _nextBodyPart;
 
 	private protected override char DisplayChar => 'o';
+	private protected override void DisplayAtPosition()
+	{
+		if (!CheckForApple()) // dont draw if on top of apple. todo: make apple not spawn on top of us
+		{
+			base.DisplayAtPosition();
+		}
+	}
 
 	protected SnakeBodyPart((int, int) spawnPos, int extraParts = 0) : base(spawnPos)
 	{
@@ -48,5 +55,10 @@ public class SnakeBodyPart : CoordinateObject
 			// send down chain
 			_nextBodyPart.GrowAtEndOfSnake();
 		}
+	}
+
+	public bool CheckForApple()
+	{
+		return Game.CurrentApple.Position == Position;
 	}
 }

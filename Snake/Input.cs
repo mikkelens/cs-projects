@@ -2,6 +2,7 @@
 
 public static class UserInput
 {
+
 	public static bool BoolAskUser(string question)
 	{
 		Console.CursorVisible = true;
