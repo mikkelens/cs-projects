@@ -2,8 +2,6 @@
 
 public class SnakeHead : SnakeBodyPart
 {
-	public static readonly List<SnakeBodyPart> BodyParts = new List<SnakeBodyPart>();
-
 	private bool _alive;
 	public bool Alive
 	{
@@ -61,7 +59,7 @@ public class SnakeHead : SnakeBodyPart
 
 	private bool CheckForBodyPart()
 	{
-		return BodyParts.Where(bodyPart => bodyPart != this).Any(bodyPart => Position == bodyPart.Position && !bodyPart.NewlySpawned);
+		return AllBodyParts.Where(bodyPart => bodyPart != this).Any(bodyPart => Position == bodyPart.Position && !bodyPart.NewlySpawned);
 	}
 #endregion
 }

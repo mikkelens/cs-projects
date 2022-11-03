@@ -1,13 +1,15 @@
 ﻿namespace Snake;
 
-// body of the snake. also inhereted for head
+// body of the snake. also inherited for head
 public class SnakeBodyPart : CoordinateObject
 {
 	public bool NewlySpawned { get; private set; }
 
+	public static List<SnakeBodyPart> AllBodyParts { private protected get; set; } = null!;
 	private SnakeBodyPart? _nextBodyPart;
 
 	private protected override char DisplayChar => 'o';
+
 	private protected override void DisplayAtPosition()
 	{
 		if (!CheckForApple()) // dont draw if on top of apple. todo: make apple not spawn on top of us
@@ -19,7 +21,10 @@ public class SnakeBodyPart : CoordinateObject
 	protected SnakeBodyPart((int, int) spawnPos, int extraParts = 0) : base(spawnPos)
 	{
 		NewlySpawned = true;
-		SnakeHead.BodyParts.Add(this);
+		if (this is not SnakeHead)
+		{
+			AllBodyParts.Add(this);
+		}
 		if (extraParts > 0)
 		{
 			_nextBodyPart = new SnakeBodyPart(spawnPos, extraParts - 1);

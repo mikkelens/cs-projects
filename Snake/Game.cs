@@ -27,6 +27,7 @@ public static class Game
 		const int startY = 1;
 		const int startLength = 3;
 		CurrentApple = SpawnNewApple();
+		SnakeBodyPart.AllBodyParts = new List<SnakeBodyPart>();
 		_snakeHead = new SnakeHead((startX, startY), startLength);
 
 		_updateRate = StartMoveSpeed;
