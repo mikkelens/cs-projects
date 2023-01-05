@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessing", "DataProcessing\DataProcessing.csproj", "{D4328A1B-B29B-4060-A805-A58C474B9B7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessing", "DataProcessing.csproj", "{D4328A1B-B29B-4060-A805-A58C474B9B7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
