@@ -6,7 +6,7 @@ public static class Program
 	public static void Main()
 	{
 		const string path = @"..\..\..\Data\netflix_titles.csv"; // works when running in debug mode
-		Show[] processedData = Loader.LoadFromFile(path);
+		IEnumerable<Show> processedData = Loader.LoadFromFile(path);
 
 		// write all in alphabetical order
 		// foreach (MovieData movie in processedData.OrderBy(show => show.Title))

@@ -2,7 +2,7 @@
 
 public static class Loader
 {
-	public static Show[] LoadFromFile(string path)
+	public static IEnumerable<Show> LoadFromFile(string path)
 	{
 		StreamReader reader = new StreamReader(File.OpenRead(path));
 		if (reader.EndOfStream) throw new ArgumentException(); // incorrect input, since it could not be read
@@ -13,12 +13,12 @@ public static class Loader
 		{
 			string? line = reader.ReadLine();
 			if (line == null) continue;
-			allLines.Add(line.Trim().Trim('"')); // todo: fix?
+			allLines.Add(line.Trim().Trim('"'));
 		}
 		allLines.RemoveAt(0); // remove first entry because it is example data
 
 		// parse for each line and return them all
-		return allLines.Select(DataStringsFromLine).Select(ParseData).ToArray();
+		return allLines.Select(DataStringsFromLine).Select(ParseData);
 	}
 
 	private static Show ParseData(string?[] parts)
