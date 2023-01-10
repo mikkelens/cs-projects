@@ -1,4 +1,6 @@
 ﻿
+using System.Data;
+
 namespace DataProcessing;
 
 public static class Program
@@ -14,64 +16,58 @@ public static class Program
 		// 	Console.WriteLine($"Movie: {movie.Title}");
 		// }
 
-		RunDataChallenges(new List<Show>(processedData));
+		Showcase.Run(new List<Show>(processedData));
+		LetUserPlayWith(new List<Show>(processedData));
+
+		Console.Write("\nPress any key to exit...");
+		Console.ReadLine();
 	}
 
-	private static void RunDataChallenges(List<Show> data)
+	private static readonly (string command, string description)[] Commands =
 	{
-		// 1) Get a random actor (from all actors)
-		Console.WriteLine($"Random actor: {Features.GetRandomActor(data.ToArray())}\n");
+		("RandomActor", "Get a random actor (from all actors)."),
+		("RandomMovieTitle", "Get the title of a random movie (from all movies)."),
+		("RandomTVShowTitle", "Get the title of a random TV-Show (from all TV-shows)."),
+		("RandomShowFromYear", "Get the title of a random show from a specific year."),
+		("ShowTypeProportions", "Get proportion of movites to tv shows as a percentage."),
+		("TitlesWithPerson", "Get the titles of all shows with a specific person as actor or director (from name)."),
+		("TitlesWithSeasonCount", "Get the title of all shows with a specific number of seasons."),
+		("InformationOnShow", "Get all information on a specific show (from title)."),
+		("AverageLengthFromRating", "Get the average length of movies with a specific age rating (from rating)."),
+		("MostUsedWords", "Get the 10 most used words in all show titles."),
+		("RemoveTitleFromData", "Remove a show (from title)."),
+		("AddShowToData", "Add a show (from title)"),
+	};
 
-		// 2) Get the title of a random movie (from all movies)
-		Console.WriteLine($"Random movie title: {Features.GetRandomMovieTitle(data.ToArray())}\n");
-
-		// 3) Get the title of a random TV-show (from all TV-shows)
-		Console.WriteLine($"Random TV-show title: {Features.GetRandomTVShowTitle(data.ToArray())}\n");
-
-		// 4) Get the title of a random show from a specific year (from year)
-		const int year = 1992; // example
-		Console.WriteLine($"Random show from '{year}': {Features.GetRandomTitleFromYear(data.ToArray(), year)}\n");
-
-		// 5) Get proportion of movies to tv shows as percentages.
-		(float movieShare, float tvShowShare) = Features.GetShowTypeShares(data.ToArray());
-		Console.WriteLine($"Movies: {movieShare * 100}%, TV-Shows: {tvShowShare * 100}%\n");
-
-		// 6) Get the titles of all shows with a specific person as actor or director (from name)
-		const string name = "Steven Spielberg"; // example
-		Console.WriteLine($"Shows with '{name}' as actor or director:\n" +
-		                  $"{string.Join(", ", Features.GetShowTitlesWithPerson(data.ToArray(), name))}]\n");
-
-		// "7) Get the titles of all shows with a specific number of seasons"
-		// ...is not possible with provided data, only with external requests/different data
-
-		// 8) Get all information on a specific show (from title)
-		const string title = "The Matrix"; // example
-		Console.WriteLine($"Information on '{title}':\n{Features.GetShowFromTitle(data.ToArray(), title)}\n");
-
-		// 9) Get the average length of movies with a specific age rating (from rating)
-		const string rating = "PG-13";
-		Console.WriteLine($"Average length for movies rated '{rating}': " +
-		                  $"{Features.GetAverageLengthFromRating(data.ToArray(), rating)} minutes\n");
-
-		// 10) Get the 10 most used words in all show titles
-		string mostUsedWords = string.Join(", ", Features.GetTenMostUsedWordsInTitles(data.ToArray())
-			.Select(x => $"'{x.word}': {x.count.ToString()}")); // display tuples
-		Console.WriteLine($"10 most used words in titles: {mostUsedWords}\n");
-
-		// 11.1) Remove shows
-		if (data.Remove(Features.GetShowFromTitle(data.ToArray(), title)))
+	private static void LetUserPlayWith(List<Show> shows)
+	{
+		// display all commands
+		Console.WriteLine("All commands:\n");
+		foreach ((string command, string description) in Commands)
 		{
-			Console.WriteLine($"Successfully removed '{title}' from the show list.\n");
+			Console.WriteLine($"{command}: {description}");
 		}
 
-		// 11.2) Add shows
-		Show sonic = new Show
+		string? input;
+		do
 		{
-			Title = "Sonic Prime",
-			Type = ShowType.TVShow,
-			AgeRating = "PG-7"
-		};
-		data.Add(sonic);
-		Console.WriteLine($"{sonic.Title} was added to the show list.\n");
+			input = Console.ReadLine();
+			if (input == null)
+			{
+				Console.WriteLine("Invalid input. See list of commands above.");
+				continue;
+			}
+		} while (!Commands.Select(x => x.command.ToLower()).Contains(input!.ToLower()));
+
+		// build command
+		switch (input.ToUpper())
+		{
+			case "RandomActor":
+
+				break;
+			default:
+				throw new DataException();
+		}
 	}
+
 }

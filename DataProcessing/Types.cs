@@ -6,6 +6,12 @@ public enum ShowType
 	TVShow
 }
 
+public enum DurationType
+{
+	Minutes,
+	Seasons,
+}
+
 public struct Show
 {
 	public string? Id;
@@ -17,7 +23,7 @@ public struct Show
 	public string? DateAdded; // todo: proper format
 	public int? ReleaseYear;
 	public string? AgeRating; // called "rating" in data
-	public int? Duration; // minutes, todo: proper format
+	public (DurationType type, int amount)? Duration; // minutes OR seasons
 	public string? ListedIn; // category
 	public string? Description; // in quotes
 
@@ -42,10 +48,23 @@ public struct Show
 		return int.Parse(str);
 	}
 
-	public static int? ParseDuration(string? str)
+	public static (DurationType, int)? ParseDuration(string? str) // not usable because TV shows are in seasons
 	{
 		if (str == null) return null;
-		return int.Parse(str.Split(' ').First());
+
+		str = str.ToLower();
+
+		if (str.Contains("seasons"))
+		{
+			return (DurationType.Seasons, int.Parse(str.Split(' ').First()));
+		}
+
+		if (str.Contains("min"))
+		{
+			return (DurationType.Minutes, int.Parse(str.Split(' ').First()));
+		}
+
+		return null;
 	}
 
 	// alt+insert with resharper to autogenerate ToString() struct display

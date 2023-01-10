@@ -103,6 +103,20 @@ public static class Features
 		return titlesWithPerson.ToArray();
 	}
 
+	public static string[] GetShowTitlesWithSeasonCount(Show[] data, int count)
+	{
+		// assume seasons are the duration field of TV shows, where movies are in minutes.
+		List<string> titlesWithSeasonCount = new List<string>();
+		foreach (Show show in data)
+		{
+			if (show.Title == null) continue;
+			if (show.Duration is not { type: DurationType.Seasons }) continue;
+			if (show.Duration.Value.amount != count) continue;
+			titlesWithSeasonCount.Add(show.Title);
+		}
+		return titlesWithSeasonCount.ToArray();
+	}
+
 	public static Show GetShowFromTitle(Show[] data, string title)
 	{
 		return data.First(show => show.Title == title);
@@ -110,16 +124,17 @@ public static class Features
 
 	public static int GetAverageLengthFromRating(Show[] data, string rating)
 	{
-		return (int)GetAllDurationsForRating().Average();
+		return (int)GetAllMovieLengthForRating().Average();
 
-		int[] GetAllDurationsForRating()
+		int[] GetAllMovieLengthForRating()
 		{
 			List<int> durationsForRating = new List<int>();
 			foreach (Show show in data)
 			{
-				if (show.Duration == null) continue;
+				if (show.Type != ShowType.Movie) continue;
+				if (show.Duration is not { type: DurationType.Minutes }) continue;
 				if (show.AgeRating == null || show.AgeRating != rating) continue;
-				durationsForRating.Add(show.Duration.Value);
+				durationsForRating.Add(show.Duration.Value.amount);
 			}
 			return durationsForRating.ToArray();
 		}
@@ -156,4 +171,5 @@ public static class Features
 		// return 10 highest as array
 		return wordList.GetRange(0, 10).ToArray();
 	}
+
 }
