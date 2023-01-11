@@ -5,7 +5,7 @@ namespace DataProcessing.Collection;
 public partial class ShowCollection // filters
 {
 #region Filters
-	public string GetRandomActor()
+	private string GetRandomActor()
 	{
 		return GetAllDistinctActors().RandomElement(); // random actor name
 
@@ -24,8 +24,7 @@ public partial class ShowCollection // filters
 			 return actors.ToArray();
 		}
 	}
-
-	public string GetRandomMovieTitle()
+	private string GetRandomMovieTitle()
 	{
 		return GetAllDistinctMovieTitles().RandomElement();
 
@@ -42,8 +41,7 @@ public partial class ShowCollection // filters
 			 return movieTitles.ToArray();
 		}
 	}
-
-	public string GetRandomTVShowTitle()
+	private string GetRandomTVShowTitle()
 	{
 		return GetAllDistinctTVShowTitles().RandomElement();
 
@@ -62,8 +60,7 @@ public partial class ShowCollection // filters
 			 return tvShowTitles.ToArray();
 		}
 	}
-
-	public string GetRandomTitleFromYear(int releaseYear)
+	private string GetRandomTitleFromYear(int releaseYear)
 	{
 		return GetAllDistinctShowTitlesFromYear().RandomElement();
 
@@ -80,8 +77,7 @@ public partial class ShowCollection // filters
 			 return showTitles.ToArray();
 		}
 	}
-
-	public (float movieShare, float tvShowShare) GetShowTypeShares()
+	private (float movieShare, float tvShowShare) GetShowTypeShares()
 	{
 		int movies = GetCountOfType(ShowType.Movie);
 		int tvShows = GetCountOfType(ShowType.TVShow);
@@ -93,8 +89,7 @@ public partial class ShowCollection // filters
 			 return _shows.Where(show => show.Type == type).ToArray().Length;
 		}
 	}
-
-	public string[] GetShowTitlesWithPerson(string person)
+	private string[] GetShowTitlesWithPerson(string person)
 	{
 		List<string> titlesWithPerson = new List<string>();
 		foreach (Show show in _shows)
@@ -105,8 +100,7 @@ public partial class ShowCollection // filters
 		}
 		return titlesWithPerson.ToArray();
 	}
-
-	public string[] GetShowTitlesWithSeasonCount(int count)
+	private string[] GetShowTitlesWithSeasonCount(int count)
 	{
 		// assume seasons are the duration field of TV shows, where movies are in minutes.
 		List<string> titlesWithSeasonCount = new List<string>();
@@ -119,17 +113,15 @@ public partial class ShowCollection // filters
 		}
 		return titlesWithSeasonCount.ToArray();
 	}
-
-	public Show GetShowFromTitle(string title)
+	private Show GetShowFromTitle(string title)
 	{
 		return _shows.First(show => show.Title == title);
 	}
-
-	public int GetAverageLengthFromRating(string rating)
+	private int GetAverageLengthFromRating(string rating)
 	{
 		return (int)GetAllMovieLengthForRating().Average();
 
-		int[] GetAllMovieLengthForRating()
+		IEnumerable<int> GetAllMovieLengthForRating()
 		{
 			 List<int> durationsForRating = new List<int>();
 			 foreach (Show show in _shows)
@@ -143,7 +135,7 @@ public partial class ShowCollection // filters
 		}
 	}
 
-	public (string word, int count)[] GetTenMostUsedWordsInTitles()
+	private IEnumerable<(string word, int count)> GetTenMostUsedWordsInTitles()
 	{
 		// count up all words in dictionary
 		Dictionary<string, int> wordCounts = new Dictionary<string, int>();
