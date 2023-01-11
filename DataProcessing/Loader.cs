@@ -1,8 +1,11 @@
-﻿namespace DataProcessing;
+﻿using DataProcessing.Collection;
+using DataProcessing.Types;
+
+namespace DataProcessing;
 
 public static class Loader
 {
-	public static IEnumerable<Show> LoadFromFile(string path)
+	public static ShowCollection LoadFromFile(string path)
 	{
 		StreamReader reader = new StreamReader(File.OpenRead(path));
 		if (reader.EndOfStream) throw new ArgumentException(); // incorrect input, since it could not be read
@@ -18,10 +21,10 @@ public static class Loader
 		allLines.RemoveAt(0); // remove first entry because it is example data
 
 		// parse for each line and return them all
-		return allLines.Select(DataStringsFromLine).Select(ParseData);
+		return new ShowCollection(allLines.Select(DataStringsFromLine).Select(ParseParts).ToList());
 	}
 
-	private static Show ParseData(string?[] parts)
+	private static Show ParseParts(string?[] parts)
 	{
 		return new Show
 		{

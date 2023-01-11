@@ -1,16 +1,4 @@
-﻿namespace DataProcessing;
-
-public enum ShowType
-{
-	Movie,
-	TVShow
-}
-
-public enum DurationType
-{
-	Minutes,
-	Seasons,
-}
+﻿namespace DataProcessing.Types;
 
 public struct Show
 {
