@@ -1,4 +1,5 @@
 ﻿using OpenAI.GPT3;
+using OpenAI.GPT3.Interfaces;
 using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels;
 using OpenAI.GPT3.ObjectModels.RequestModels;
@@ -77,12 +78,42 @@ public static class Program
 			Organization = org
 		});
 
+
 		await ChatGPTConversation(openAiService);
+
 
 		Console.WriteLine("\nConversation ended.\n");
 	}
 
-	private static async Task ChatGPTConversation(OpenAIService openAiService)
+	private enum AITool
+	{
+		Invalid,
+		DALLE,
+		ChatGPT
+	}
+	private static AITool ParseAITool(this string? request)
+	{
+		if (request == null) return AITool.Invalid;
+		request = request.ToLower();
+		if (request.Contains("gpt") || request.Contains("chat")) return AITool.ChatGPT;
+		if (request.Contains("dall") || request.Contains("image")) return AITool.DALLE;
+		return AITool.Invalid;
+	}
+
+	private static async Task DALLEImageGeneration()
+	{
+		string? prompt;
+		do
+		{
+			prompt = PromptUser("\nWrite a prompt for DALL-E. Type 'exit' to leave.");
+			while (prompt == null)
+			{
+				prompt = PromptUser("\nPrompt was empty? Try again.");
+			}
+		}
+	}
+
+	private static async Task ChatGPTConversation(IOpenAIService openAiService)
 	{
 		List<ChatMessage> messages = new List<ChatMessage>
 		{
