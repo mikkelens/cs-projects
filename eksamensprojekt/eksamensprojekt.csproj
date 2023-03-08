@@ -5,14 +5,11 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>1ddcd4c7-279e-43f4-bc5a-6b423f2bbe41</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Betalgo.OpenAI.GPT3" Version="6.7.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="OpenAI\key.txt" />
-    </ItemGroup>
-
 </Project>
