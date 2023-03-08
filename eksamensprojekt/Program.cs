@@ -1,4 +1,5 @@
-﻿using OpenAI.GPT3;
+﻿using System.Diagnostics;
+using System.Net;
 using OpenAI.GPT3.Interfaces;
 using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels;
@@ -10,12 +11,22 @@ namespace eksamensprojekt;
 
 public static class Program
 {
+	private static IOpenAIService _openAiService = null!;
+
 	private static async Task Main()
 	{
+		if (Utilities.InitializeAIService() is not { } openAiService) throw new Exception("AIService could not be initialized!");
+		_openAiService = openAiService;
+
 		do
 		{
 			Console.Clear();
-			await MakeUserExchange();
+			await (ToolAsk($"\nChoose an AI tool to use: ChatGPT or DALL-E\n") switch
+			{
+				AITool.ChatGPT => ChatGPTConversation(),
+				AITool.DALLE => DALLEImageGeneration(),
+				AITool.Invalid or _ => throw new ArgumentOutOfRangeException()
+			});
 		} while (BoolAsk("Do you want to use another tool?"));
 
 		Console.WriteLine("\n\n\nProgram finished. Press any key to exit.");
@@ -28,102 +39,26 @@ public static class Program
 		return Console.ReadLine();
 	}
 
-	private enum BoolAnswer
-	{
-		Invalid,
-		Yes,
-		No
-	}
-	private const char YesChar = 'y';
-	private const char NoChar = 'n';
-	private static BoolAnswer ParseBoolAnswer(this string? request)
-	{
-		if (request == null) return BoolAnswer.Invalid;
-		if (request.Contains(YesChar)) return BoolAnswer.Yes;
-		if (request.Contains(NoChar)) return BoolAnswer.No;
-		return BoolAnswer.Invalid;
-	}
 	private static bool BoolAsk(string yesNoQuestion)
 	{
 		BoolAnswer answer = PromptUser(yesNoQuestion).ParseBoolAnswer();
 		while (answer == BoolAnswer.Invalid)
 		{
-			answer = PromptUser($"Invalid answer? Try again (Must contain '{YesChar}' or '{NoChar}').").ParseBoolAnswer();
+			answer = PromptUser($"Invalid answer? Try again (Must contain '{Utilities.YesChar}' or '{Utilities.NoChar}').").ParseBoolAnswer();
 		}
 		return answer == BoolAnswer.Yes;
-	}
-
-	private static async Task MakeUserExchange()
-	{
-		if (InitializeAIService() is not { } openAiService)
-		{
-			throw new Exception("AIService could not be initialized!");
-			return;
-		}
-
-		await (ToolAsk($"\nChoose an AI tool to use: ChatGPT or DALL-E\n") switch
-		{
-			AITool.ChatGPT => ChatGPTConversation(openAiService),
-			AITool.DALLE => DALLEImageGeneration(openAiService),
-			AITool.Invalid or _ => throw new ArgumentOutOfRangeException()
-		});
-	}
-
-	private enum AITool
-	{
-		Invalid,
-		ChatGPT,
-		DALLE
-	}
-	private const string GPTStr = "gpt";
-	private const string DALLEStr = "dall";
-	private static AITool ParseAITool(this string? request)
-	{
-		if (request == null) return AITool.Invalid;
-		request = request.ToLower();
-		if (request.Contains(GPTStr)) return AITool.ChatGPT;
-		if (request.Contains(DALLEStr)) return AITool.DALLE;
-		return AITool.Invalid;
 	}
 	private static AITool ToolAsk(string toolQuestion)
 	{
 		AITool tool = PromptUser(toolQuestion).ParseAITool();
 		while (tool == AITool.Invalid)
 		{
-			tool = PromptUser($"Invalid answer? Try again (Must contain '{GPTStr} or '{DALLEStr}''").ParseAITool();
+			tool = PromptUser($"Invalid answer? Try again (Must contain '{Utilities.GPTStr} or '{Utilities.DALLEStr}''").ParseAITool();
 		}
 		return tool;
 	}
 
-	private static OpenAIService? InitializeAIService()
-	{
-		const string orgFile = "org.txt";
-		const string keyFile = "key.txt";
-
-		string projectPath = Directory.GetParent(Environment.CurrentDirectory)?.Parent!.Parent!.FullName!;
-		string orgPath = $"{projectPath}/{orgFile}";
-		string keyPath = $"{projectPath}/{keyFile}";
-		if (!File.Exists(orgPath) || File.ReadLines(orgPath).FirstOrDefault() is not { } org)
-		{
-			Console.WriteLine($"'{orgPath}' file missing.");
-			return null;
-		}
-
-		if (!File.Exists(keyPath) || File.ReadLines(keyPath).FirstOrDefault() is not { } key)
-		{
-			Console.WriteLine($"'{keyPath}' file missing.");
-			return null;
-		}
-
-		return new OpenAIService(new OpenAiOptions
-		{
-			ApiKey = key,
-			Organization = org
-		});
-	}
-
-
-	private static async Task DALLEImageGeneration(OpenAIService openAiService)
+	private static async Task DALLEImageGeneration()
 	{
 		string? prompt;
 		do
@@ -134,7 +69,7 @@ public static class Program
 				prompt = PromptUser("\nPrompt was empty? Try again.");
 			}
 
-			ImageCreateResponse imageResult = await openAiService.Image.CreateImage(new ImageCreateRequest
+			ImageCreateResponse imageResult = await _openAiService.Image.CreateImage(new ImageCreateRequest
 			{
 				Prompt = prompt,
 				N = 1,
@@ -144,7 +79,25 @@ public static class Program
 
 			if (imageResult.Successful)
 			{
-				Console.WriteLine($"NEW IMAGE URL: {imageResult.Results.First().Url}");
+				string url = imageResult.Results.First().Url;
+				Console.WriteLine($"\nNEW IMAGE URL:\n{url}");
+				if (BoolAsk("\nDo you want to download and open the image?"))
+				{
+#pragma warning disable SYSLIB0014
+					using WebClient client = new WebClient();
+#pragma warning restore SYSLIB0014
+					const string imageName = "image.png";
+					string imageDirectory = Utilities.ImageDirectoryPath;
+					string imagePath = $"{imageDirectory}/{imageName}";
+					await client.DownloadFileTaskAsync(new Uri(url), imagePath);
+					Process.Start(new ProcessStartInfo(imageName)
+					{
+						Arguments = imageName,
+						UseShellExecute = true,
+						WorkingDirectory = imageDirectory,
+						FileName = imagePath
+					});
+				}
 			}
 			else
 			{
@@ -156,11 +109,11 @@ public static class Program
 		} while (!prompt.ToLower().Contains("exit"));
 	}
 
-	private static async Task ChatGPTConversation(IOpenAIService openAiService)
+	private static async Task ChatGPTConversation()
 	{
 		List<ChatMessage> messages = new List<ChatMessage>
 		{
-			ChatMessage.FromSystem("You are a helpful assistant."),
+			ChatMessage.FromSystem("You are a helpful assistant.")
 		};
 
 		string? prompt;
@@ -174,7 +127,7 @@ public static class Program
 			if (prompt.ToLower().Contains("exit")) break;
 			messages.Add(ChatMessage.FromUser(prompt));
 
-			ChatCompletionCreateResponse chatResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+			ChatCompletionCreateResponse chatResult = await _openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
 			{
 				Messages = messages,
 				Model = Models.ChatGpt3_5Turbo
