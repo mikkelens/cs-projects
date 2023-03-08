@@ -1,5 +1,4 @@
-﻿using OpenAI;
-using OpenAI.GPT3;
+﻿using OpenAI.GPT3;
 using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels;
 using OpenAI.GPT3.ObjectModels.RequestModels;
@@ -13,11 +12,18 @@ public static class Program
 	{
 		do
 		{
+			Console.Clear();
 			await MakeUserExchange();
 		} while (BoolAsk("Do you want to do another conversation?"));
 
 		Console.WriteLine("\n\n\nProgram finished. Press any key to exit.");
 		Console.ReadLine();
+	}
+
+	private static string? PromptUser(string prompt)
+	{
+		Console.Write($"{prompt}\n> ");
+		return Console.ReadLine();
 	}
 
 	private enum BoolAnswer
@@ -48,8 +54,12 @@ public static class Program
 
 	private static async Task MakeUserExchange()
 	{
-		const string orgPath = "org.txt";
-		const string keyPath = "key.txt";
+		const string orgFile = "org.txt";
+		const string keyFile = "key.txt";
+
+		string projectPath = Directory.GetParent(Environment.CurrentDirectory)?.Parent!.Parent!.FullName!;
+		string orgPath = $"{projectPath}/{orgFile}";
+		string keyPath = $"{projectPath}/{keyFile}";
 		if (!File.Exists(orgPath) || File.ReadLines(orgPath).FirstOrDefault() is not { } org)
 		{
 			Console.WriteLine($"'{orgPath}' file missing.");
@@ -64,30 +74,36 @@ public static class Program
 		OpenAIService openAiService = new OpenAIService(new OpenAiOptions
 		{
 			ApiKey = key,
-			DefaultModelId = Models.TextDavinciV3,
 			Organization = org
 		});
 
+		await ChatGPTConversation(openAiService);
+
+		Console.WriteLine("\nConversation ended.\n");
+	}
+
+	private static async Task ChatGPTConversation(OpenAIService openAiService)
+	{
 		List<ChatMessage> messages = new List<ChatMessage>
 		{
 			ChatMessage.FromSystem("You are a helpful assistant."),
 		};
 
-
 		string? prompt;
 		do // conversation loop
 		{
-			prompt = PromptUser("Write a prompt for ChatGPT. Type 'exit' to leave.\n");
+			prompt = PromptUser("\nWrite a prompt for ChatGPT. Type 'exit' to leave.\n");
 			while (prompt == null)
 			{
 				prompt = PromptUser("\nPrompt was empty? Try again.\n");
 			}
-			if (prompt.ToLower().Contains("text")) return;
+			if (prompt.ToLower().Contains("exit")) break;
 			messages.Add(ChatMessage.FromUser(prompt));
 
 			ChatCompletionCreateResponse result = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
 			{
-				Messages = messages
+				Messages = messages,
+				Model = Models.ChatGpt3_5Turbo
 			});
 			if (result.Successful)
 			{
@@ -98,18 +114,9 @@ public static class Program
 			else
 			{
 				if (result.Error is not { } error) throw new Exception("Unknown Error?");
-				Console.WriteLine($"{error.Code}: {error.Message}");
+				Console.WriteLine($"ERROR [{error.Code ??= "(unnamed)"}]: {error.Message}");
 				break;
 			}
 		} while (!prompt.ToLower().Contains("exit")); // continue conversation
-
-		Console.WriteLine("\nConversation ended.");
-	}
-
-	private static string? PromptUser(string prompt)
-	{
-		Console.WriteLine(prompt);
-		Console.Write("> ");
-		return Console.ReadLine();
 	}
 }
