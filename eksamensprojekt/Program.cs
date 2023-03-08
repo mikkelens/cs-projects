@@ -4,6 +4,7 @@ using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels;
 using OpenAI.GPT3.ObjectModels.RequestModels;
 using OpenAI.GPT3.ObjectModels.ResponseModels;
+using OpenAI.GPT3.ObjectModels.ResponseModels.ImageResponseModel;
 
 namespace eksamensprojekt;
 
@@ -15,7 +16,7 @@ public static class Program
 		{
 			Console.Clear();
 			await MakeUserExchange();
-		} while (BoolAsk("Do you want to do another conversation?"));
+		} while (BoolAsk("Do you want to use another tool?"));
 
 		Console.WriteLine("\n\n\nProgram finished. Press any key to exit.");
 		Console.ReadLine();
@@ -35,7 +36,6 @@ public static class Program
 	}
 	private const char YesChar = 'y';
 	private const char NoChar = 'n';
-
 	private static BoolAnswer ParseBoolAnswer(this string? request)
 	{
 		if (request == null) return BoolAnswer.Invalid;
@@ -55,6 +55,48 @@ public static class Program
 
 	private static async Task MakeUserExchange()
 	{
+		if (InitializeAIService() is not { } openAiService)
+		{
+			throw new Exception("AIService could not be initialized!");
+			return;
+		}
+
+		await (ToolAsk($"\nChoose an AI tool to use: ChatGPT or DALL-E\n") switch
+		{
+			AITool.ChatGPT => ChatGPTConversation(openAiService),
+			AITool.DALLE => DALLEImageGeneration(openAiService),
+			AITool.Invalid or _ => throw new ArgumentOutOfRangeException()
+		});
+	}
+
+	private enum AITool
+	{
+		Invalid,
+		ChatGPT,
+		DALLE
+	}
+	private const string GPTStr = "gpt";
+	private const string DALLEStr = "dall";
+	private static AITool ParseAITool(this string? request)
+	{
+		if (request == null) return AITool.Invalid;
+		request = request.ToLower();
+		if (request.Contains(GPTStr)) return AITool.ChatGPT;
+		if (request.Contains(DALLEStr)) return AITool.DALLE;
+		return AITool.Invalid;
+	}
+	private static AITool ToolAsk(string toolQuestion)
+	{
+		AITool tool = PromptUser(toolQuestion).ParseAITool();
+		while (tool == AITool.Invalid)
+		{
+			tool = PromptUser($"Invalid answer? Try again (Must contain '{GPTStr} or '{DALLEStr}''").ParseAITool();
+		}
+		return tool;
+	}
+
+	private static OpenAIService? InitializeAIService()
+	{
 		const string orgFile = "org.txt";
 		const string keyFile = "key.txt";
 
@@ -64,43 +106,24 @@ public static class Program
 		if (!File.Exists(orgPath) || File.ReadLines(orgPath).FirstOrDefault() is not { } org)
 		{
 			Console.WriteLine($"'{orgPath}' file missing.");
-			return;
+			return null;
 		}
+
 		if (!File.Exists(keyPath) || File.ReadLines(keyPath).FirstOrDefault() is not { } key)
 		{
 			Console.WriteLine($"'{keyPath}' file missing.");
-			return;
+			return null;
 		}
 
-		OpenAIService openAiService = new OpenAIService(new OpenAiOptions
+		return new OpenAIService(new OpenAiOptions
 		{
 			ApiKey = key,
 			Organization = org
 		});
-
-
-		await ChatGPTConversation(openAiService);
-
-
-		Console.WriteLine("\nConversation ended.\n");
 	}
 
-	private enum AITool
-	{
-		Invalid,
-		DALLE,
-		ChatGPT
-	}
-	private static AITool ParseAITool(this string? request)
-	{
-		if (request == null) return AITool.Invalid;
-		request = request.ToLower();
-		if (request.Contains("gpt") || request.Contains("chat")) return AITool.ChatGPT;
-		if (request.Contains("dall") || request.Contains("image")) return AITool.DALLE;
-		return AITool.Invalid;
-	}
 
-	private static async Task DALLEImageGeneration()
+	private static async Task DALLEImageGeneration(OpenAIService openAiService)
 	{
 		string? prompt;
 		do
@@ -110,7 +133,27 @@ public static class Program
 			{
 				prompt = PromptUser("\nPrompt was empty? Try again.");
 			}
-		}
+
+			ImageCreateResponse imageResult = await openAiService.Image.CreateImage(new ImageCreateRequest
+			{
+				Prompt = prompt,
+				N = 1,
+				Size = StaticValues.ImageStatics.Size.Size256,
+				ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
+			});
+
+			if (imageResult.Successful)
+			{
+				Console.WriteLine($"NEW IMAGE URL: {imageResult.Results.First().Url}");
+			}
+			else
+			{
+				if (imageResult.Error is not { } error) throw new Exception("Unknown Error?");
+				Console.WriteLine($"ERROR [{error.Code ??= "(unnamed)"}]: {error.Message}");
+				break;
+			}
+
+		} while (!prompt.ToLower().Contains("exit"));
 	}
 
 	private static async Task ChatGPTConversation(IOpenAIService openAiService)
@@ -131,23 +174,25 @@ public static class Program
 			if (prompt.ToLower().Contains("exit")) break;
 			messages.Add(ChatMessage.FromUser(prompt));
 
-			ChatCompletionCreateResponse result = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+			ChatCompletionCreateResponse chatResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
 			{
 				Messages = messages,
 				Model = Models.ChatGpt3_5Turbo
 			});
-			if (result.Successful)
+			if (chatResult.Successful)
 			{
-				ChatMessage reply = result.Choices.First().Message;
+				ChatMessage reply = chatResult.Choices.First().Message;
 				messages.Add(reply);
 				Console.WriteLine($"\nChatGPT reply: {reply.Content}");
 			}
 			else
 			{
-				if (result.Error is not { } error) throw new Exception("Unknown Error?");
+				if (chatResult.Error is not { } error) throw new Exception("Unknown Error?");
 				Console.WriteLine($"ERROR [{error.Code ??= "(unnamed)"}]: {error.Message}");
 				break;
 			}
 		} while (!prompt.ToLower().Contains("exit")); // continue conversation
+
+		Console.WriteLine("\nConversation ended.\n");
 	}
 }
