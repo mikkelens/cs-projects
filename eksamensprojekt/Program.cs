@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using OpenAI.GPT3.Interfaces;
-using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels;
 using OpenAI.GPT3.ObjectModels.RequestModels;
 using OpenAI.GPT3.ObjectModels.ResponseModels;
@@ -33,45 +32,51 @@ public static class Program
 		Console.ReadLine();
 	}
 
-	private static string? PromptUser(string prompt)
+	private static string? PromptUserNullable(string prompt)
 	{
 		Console.Write($"{prompt}\n> ");
 		return Console.ReadLine();
 	}
+	private static string PromptUserNonempty(string prompt)
+	{
+		string? answer = PromptUserNullable(prompt);
+		while (answer == null)
+		{
+			answer = PromptUserNullable("\nPrompt was empty? Try again.");
+		}
+		return answer;
+	}
 
 	private static bool BoolAsk(string yesNoQuestion)
 	{
-		BoolAnswer answer = PromptUser(yesNoQuestion).ParseBoolAnswer();
+		BoolAnswer answer = PromptUserNullable(yesNoQuestion).ParseBoolAnswer();
 		while (answer == BoolAnswer.Invalid)
 		{
-			answer = PromptUser($"Invalid answer? Try again (Must contain '{Utilities.YesChar}' or '{Utilities.NoChar}').").ParseBoolAnswer();
+			answer = PromptUserNullable($"Invalid answer? Try again (Must contain '{Utilities.YesChar}' or '{Utilities.NoChar}').").ParseBoolAnswer();
 		}
 		return answer == BoolAnswer.Yes;
 	}
 	private static AITool ToolAsk(string toolQuestion)
 	{
-		AITool tool = PromptUser(toolQuestion).ParseAITool();
+		AITool tool = PromptUserNullable(toolQuestion).ParseAITool();
 		while (tool == AITool.Invalid)
 		{
-			tool = PromptUser($"Invalid answer? Try again (Must contain '{Utilities.GPTStr} or '{Utilities.DALLEStr}''").ParseAITool();
+			tool = PromptUserNullable($"Invalid answer? Try again (Must contain '{Utilities.GPTStr}' or '{Utilities.DALLEStr}'").ParseAITool();
 		}
 		return tool;
 	}
 
 	private static async Task DALLEImageGeneration()
 	{
-		string? prompt;
+		string? answer;
 		do
 		{
-			prompt = PromptUser("\nWrite a prompt for DALL-E. Type 'exit' to leave.");
-			while (prompt == null)
-			{
-				prompt = PromptUser("\nPrompt was empty? Try again.");
-			}
+			answer = PromptUserNonempty("\nWrite a prompt for DALL-E. Type 'exit' to leave.");
+			if (answer.ToLower() == "exit") break;
 
 			ImageCreateResponse imageResult = await _openAiService.Image.CreateImage(new ImageCreateRequest
 			{
-				Prompt = prompt,
+				Prompt = answer,
 				N = 1,
 				Size = StaticValues.ImageStatics.Size.Size256,
 				ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
@@ -83,19 +88,30 @@ public static class Program
 				Console.WriteLine($"\nNEW IMAGE URL:\n{url}");
 				if (BoolAsk("\nDo you want to download and open the image?"))
 				{
-#pragma warning disable SYSLIB0014
-					using WebClient client = new WebClient();
-#pragma warning restore SYSLIB0014
-					const string imageName = "image.png";
 					string imageDirectory = Utilities.ImageDirectoryPath;
-					string imagePath = $"{imageDirectory}/{imageName}";
-					await client.DownloadFileTaskAsync(new Uri(url), imagePath);
+					const string defaultImageName = "result";
+					string imageName = defaultImageName;
+					string imageNameWithExtension = ImageNameWithExtension(imageName);
+					string ImageNameWithExtension(string name) => $"{imageName}.png";
+					string NumberedImageName(int number) => ImageNameWithExtension($"{imageName}_{number})");
+					string ImagePath() => $"{imageDirectory}/{imageNameWithExtension}";
+
+					for (int i = 1; File.Exists(ImagePath()); i++)
+					{
+						imageName = NumberedImageName(i);
+					}
+					string actualImagePath = ImagePath();
+
+					#pragma warning disable SYSLIB0014
+					using WebClient client = new WebClient();
+					#pragma warning restore SYSLIB0014
+					await client.DownloadFileTaskAsync(new Uri(url), actualImagePath);
 					Process.Start(new ProcessStartInfo(imageName)
 					{
 						Arguments = imageName,
 						UseShellExecute = true,
 						WorkingDirectory = imageDirectory,
-						FileName = imagePath
+						FileName = actualImagePath
 					});
 				}
 			}
@@ -106,7 +122,7 @@ public static class Program
 				break;
 			}
 
-		} while (!prompt.ToLower().Contains("exit"));
+		} while (answer.ToLower() != "exit");
 	}
 
 	private static async Task ChatGPTConversation()
@@ -116,16 +132,13 @@ public static class Program
 			ChatMessage.FromSystem("You are a helpful assistant.")
 		};
 
-		string? prompt;
+		string? answer;
 		do // conversation loop
 		{
-			prompt = PromptUser("\nWrite a prompt for ChatGPT. Type 'exit' to leave.\n");
-			while (prompt == null)
-			{
-				prompt = PromptUser("\nPrompt was empty? Try again.\n");
-			}
-			if (prompt.ToLower().Contains("exit")) break;
-			messages.Add(ChatMessage.FromUser(prompt));
+			answer = PromptUserNonempty("\nWrite a prompt for ChatGPT. Type 'exit' to leave.\n");
+			if (answer.ToLower() == "exit") break;
+
+			messages.Add(ChatMessage.FromUser(answer));
 
 			ChatCompletionCreateResponse chatResult = await _openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
 			{
@@ -144,7 +157,7 @@ public static class Program
 				Console.WriteLine($"ERROR [{error.Code ??= "(unnamed)"}]: {error.Message}");
 				break;
 			}
-		} while (!prompt.ToLower().Contains("exit")); // continue conversation
+		} while (answer.ToLower() != "exit"); // continue conversation
 
 		Console.WriteLine("\nConversation ended.\n");
 	}

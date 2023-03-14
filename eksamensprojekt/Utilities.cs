@@ -1,11 +1,12 @@
-﻿using OpenAI.GPT3;
+﻿using System.Collections;
+using OpenAI.GPT3;
 using OpenAI.GPT3.Managers;
 
 namespace eksamensprojekt;
 
 public static class Utilities
 {
-	public static string ProjectPath => Directory.GetParent(Environment.CurrentDirectory)?.Parent!.Parent!.FullName!;
+	private static string ProjectPath => Directory.GetParent(Environment.CurrentDirectory)?.Parent!.Parent!.FullName!;
 	public static string ImageDirectoryPath => $"{ProjectPath}/ImageOutput";
 
 	public static OpenAIService? InitializeAIService()
@@ -44,14 +45,14 @@ public static class Utilities
 		return BoolAnswer.Invalid;
 	}
 
-	public const string GPTStr = "gpt";
-	public const string DALLEStr = "dall";
+	public static readonly DisplayList<string> GPTStr = new DisplayList<string>(lastSeperation: "or") { "chat", "gpt" };
+	public static readonly DisplayList<string> DALLEStr = new DisplayList<string>(lastSeperation: "or") { "dall", "dall-e" };
 	public static AITool ParseAITool(this string? request)
 	{
 		if (request == null) return AITool.Invalid;
 		request = request.ToLower();
-		if (request.Contains(GPTStr)) return AITool.ChatGPT;
-		if (request.Contains(DALLEStr)) return AITool.DALLE;
+		if (GPTStr.Any(request.Contains)) return AITool.ChatGPT;
+		if (DALLEStr.Any(request.Contains)) return AITool.DALLE;
 		return AITool.Invalid;
 	}
 }
